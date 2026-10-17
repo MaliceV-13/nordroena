@@ -2,7 +2,18 @@
 
 A mobile-first static web course in **historical Old West Norse / Classical normalized Old Norse** — the language of scholarly saga editions — **not** Modern Icelandic.
 
-Pedagogy mirrors a **Duolingo-style learning path** (sections → units → levels → short sessions) without copying Duolingo’s trademark art, owl, or green brand. Visual language is parchment/ink scholarly.
+Pedagogy mirrors a **Duolingo-style learning path** (sections → units → levels → short sessions) without copying Duolingo’s trademark art, owl, or green brand.
+
+### Visual design (v0.3 — Norse-mythology makeover, visual only)
+
+- Charcoal / grey / black stone with white accents; **silver** buttons and options, **gold** for primary, active and current states; sepia parchment cards for long reading.
+- Header with a round runic emblem, engraved **Cinzel** title (OFL, embedded subset in `fonts/`), real streak / XP chips; bottom tab bar (Path · Lesson 1 · Charter · Futhark · Review).
+- Home hero: the user’s Yggdrasil illustration, hand-tinted (`tools/tint_yggdrasil.py`), framed in gold with a glowing Elder Futhark strip; winding dotted path of round carved-runestone level nodes.
+- All decorative runes glow icy blue (`--rune`), drawn as SVG strokes so they render without a Runic font.
+- Original inline SVG ornaments in `js/art.js` (knotwork bands, triquetra, valknut, Mjǫllnir, ravens, longship, Bifrǫst, runestones, celebration medallion) plus user-supplied illustrations (`art-user/` originals, compressed WebP + JPEG in `img/` via `tools/compress_art.py`).
+- Captions and credits: home → **About the art & symbols** (historical notes, Vegvísir flagged as an early-modern Icelandic stave, horned helmets flagged as modern).
+- Starfield / aurora backdrop and all animations switch off under `prefers-reduced-motion`.
+- Home-screen icons in `icons/` + `manifest.webmanifest`.
 
 ## Path structure
 

@@ -154,27 +154,29 @@
     return map[type] || "●";
   }
 
+  const A = () => NORDRONA.art;
+
   function renderHeader() {
     const stats = NORDRONA.progress.getStats();
     return `
       <header class="site-header path-header">
         <a href="#/home" class="brand" data-nav="home">
-          <span class="brand-mark">ᚾ</span>
+          <span class="brand-mark">${A().roundEmblem("brand-emblem")}</span>
           <span class="brand-text">
             <strong>Norðrœna</strong>
             <small>Old Norse Path</small>
           </span>
         </a>
         <div class="stat-pills">
-          <span class="pill streak" title="Day streak">🔥 ${stats.streak}</span>
-          <span class="pill xp" title="Experience">✦ ${stats.xp} XP</span>
+          <span class="pill streak" title="Day streak">${A().flame()}<b>${stats.streak}</b> <small>day streak</small></span>
+          <span class="pill xp" title="Experience">${A().star()}<b>${stats.xp}</b> <small>XP</small></span>
         </div>
-        <nav class="nav">
-          <a href="#/home" data-nav="home">Path</a>
-          <a href="#/lesson/1" data-nav="lesson">Lesson 1</a>
-          <a href="#/charter" data-nav="charter">Charter</a>
-          <a href="#/futhark" data-nav="futhark">Futhark</a>
-          <a href="#/review" data-nav="review">Review</a>
+        <nav class="nav tabbar" aria-label="Main">
+          <a href="#/home" data-nav="home">${A().tabIcon("home")}<span>Path</span></a>
+          <a href="#/lesson/1" data-nav="lesson">${A().tabIcon("lesson")}<span>Lesson 1</span></a>
+          <a href="#/charter" data-nav="charter">${A().tabIcon("charter")}<span>Charter</span></a>
+          <a href="#/futhark" data-nav="futhark">${A().tabIcon("futhark")}<span>Futhark</span></a>
+          <a href="#/review" data-nav="review">${A().tabIcon("review")}<span>Review</span></a>
         </nav>
       </header>`;
   }
@@ -192,16 +194,20 @@
       pathHtml += `
         <section class="path-section ${lockedSec ? "coming-soon" : ""}" id="sec-${escapeHtml(sec.id)}">
           <header class="path-section-head">
+            <div class="sec-banner" aria-hidden="true">${A().sectionArt(sec.id, "sec-banner-img")}<span class="sec-banner-shade"></span><span class="sec-ravens">${A().raven("sr-1")}${A().raven("sr-2", true)}</span></div>
+            ${A().sectionMedallion(sec.id)}
             <p class="eyebrow">Section ${si + 1}</p>
             <h2>${escapeHtml(sec.title)}</h2>
             <p class="muted">${escapeHtml(sec.subtitle || "")}</p>
             ${lockedSec ? '<span class="chip lock">Coming soon</span>' : ""}
-          </header>`;
+          </header>
+          ${A().knotBand(340, { medallion: true, cls: "sec-knot" })}`;
 
       (sec.units || []).forEach((unit, ui) => {
         pathHtml += `
           <div class="path-unit ${unit.comingSoon ? "coming-soon" : ""}">
             <div class="unit-banner">
+              <span class="unit-badge" aria-hidden="true">${unit.id === "u3" ? A().picture("odin-wolves", "unit-badge-pic") : A().unitIcon(unit.id)}</span>
               <strong>Unit ${ui + 1}</strong>
               <span>${escapeHtml(unit.title)}</span>
               ${unit.comingSoon ? '<em class="muted"> — locked</em>' : ""}
@@ -217,7 +223,7 @@
           const done = P.isLevelComplete(lv.id);
           const unlocked = !lv.lockedShell && !sec.comingSoon && P.isLevelUnlocked(lv.id);
           const isCurrent = continueId === lv.id && !lv.notesOnly && lv.type !== "notes";
-          const zigzag = li % 2 === 0 ? "left" : "right";
+          const zigzag = (li % 2 === 0 ? "left" : "right") + " wind-" + (li % 4);
           let cls = `path-node type-${lv.type} ${zigzag}`;
           if (done) cls += " done";
           if (!unlocked || lv.lockedShell) cls += " locked";
@@ -238,7 +244,7 @@
               ${li > 0 ? '<div class="path-connector" aria-hidden="true"></div>' : ""}
               <a class="${cls}" href="${href}" data-level="${escapeHtml(lv.id)}"
                  title="${escapeHtml(label)}" ${!unlocked || lv.lockedShell ? 'aria-disabled="true"' : ""}>
-                <span class="node-icon">${lv.icon && lv.icon.length <= 2 ? escapeHtml(lv.icon) : typeIcon(lv.type)}</span>
+                <span class="node-icon">${A().nodeIcon(lv.icon) || (lv.icon && lv.icon.length <= 2 ? escapeHtml(lv.icon) : typeIcon(lv.type))}</span>
                 <span class="node-type">${escapeHtml(lv.type)}</span>
                 <span class="node-title">${escapeHtml(label)}</span>
                 ${done ? '<span class="node-check">✓</span>' : ""}
@@ -258,7 +264,7 @@
       .map(
         (sp) => `
       <a class="side-path-card" href="${escapeHtml(sp.route)}">
-        <span class="side-glyph">ᚦ</span>
+        <span class="side-glyph" aria-hidden="true">${sp.id === "futhark" ? A().runestone("side-svg") : A().manuscript("side-svg")}</span>
         <div>
           <strong>${escapeHtml(sp.title)}</strong>
           <p class="muted">${escapeHtml(sp.subtitle)}</p>
@@ -271,13 +277,17 @@
     return `
       <section class="path-home">
         <div class="path-hero">
+          <div class="hero-frame" aria-hidden="true">
+            <div class="hero-art">${A().picture("yggdrasil-tinted", "hero-img", { eager: true, pos: "50% 38%" })}<span class="hero-shade"></span></div>
+            ${A().runeStrip("hero-runes")}
+          </div>
           <p class="eyebrow">Historical Old West Norse</p>
           <h1>${escapeHtml(path.title)}</h1>
           <p class="lede">A winding path through Classical <em>normalized</em> Old Norse — sounds, first words, and philological honesty. Not Modern Icelandic. Not a green-owl clone.</p>
           <div class="hero-actions">
             ${
               continueFound
-                ? `<a class="btn primary continue-cta" href="#/session/${escapeHtml(continueId)}">Continue · ${escapeHtml(continueFound.level.title)}</a>`
+                ? `<a class="btn primary continue-cta" href="#/session/${escapeHtml(continueId)}">${A().triquetra("cta-icon")}<span>Continue · ${escapeHtml(continueFound.level.title)}</span></a>`
                 : `<span class="btn primary" disabled>Path complete (Section 1)</span>`
             }
             <a class="btn ghost" href="#/charter">Charter</a>
@@ -290,6 +300,7 @@
           <h2>Side paths &amp; full notes</h2>
           ${side}
         </section>
+        ${renderArtNotes()}
         <p class="center"><button type="button" class="btn ghost" id="reset-progress">Reset all progress</button></p>
       </section>`;
   }
@@ -620,6 +631,8 @@
   function renderCelebrate(payload) {
     return `
       <div class="celebrate">
+        ${A().runeShower()}
+        <div class="celebrate-medallion" aria-hidden="true">${A().medallion()}</div>
         <p class="eyebrow">Level complete</p>
         <h1>${payload.perfect ? "Flawless!" : "Well done!"}</h1>
         <p class="lede">+${payload.xp} XP${payload.perfect ? " (perfect bonus)" : ""} · ${payload.mistakes} mistake${payload.mistakes === 1 ? "" : "s"}</p>
@@ -637,6 +650,7 @@
   function renderFailed() {
     return `
       <div class="celebrate failed">
+        <div class="celebrate-medallion failed-mark" aria-hidden="true">${A().shield()}</div>
         <p class="eyebrow">Out of hearts</p>
         <h1>Rest &amp; retry</h1>
         <p class="lede">You used the mistake budget. Review missed items, then try the level again — progress on this node is not saved until you finish.</p>
@@ -669,6 +683,142 @@
     return S.renderShell(state.showIntro);
   }
 
+  function artCredit() {
+    return `<span class="art-credit">Art: illustrations supplied by the user; knotwork, rune and emblem ornaments are original SVG. <a href="#/home" data-art-notes>About the art &amp; symbols</a></span>`;
+  }
+
+  /** "About the art & symbols" — captions kept historically careful. */
+  function renderArtNotes() {
+    return `
+      <details class="art-notes panel" id="art-notes">
+        <summary>About the art &amp; symbols</summary>
+        <p class="muted">Decoration only — none of it is lesson content. Captions note what is historical and what is modern.</p>
+        <h3>Ornaments (original SVG drawings)</h3>
+        <ul class="scholar-list">
+          <li><strong>Knotwork bands</strong> — simplified, original interlace inspired by the Ringerike (c. 990–1050) and Urnes (c. 1050–1150) styles; Urnes is named after carvings on Urnes stave church, Norway.</li>
+          <li><strong>Yggdrasil</strong> — the world-ash of Eddic myth (<em>Vǫluspá</em>, <em>Grímnismál</em>; Snorri’s <em>Gylfaginning</em>), with three roots. Our tree is a modern stylisation.</li>
+          <li><strong>Huginn &amp; Muninn</strong> — Óðinn’s ravens, ‘thought’ and ‘mind/memory’ (<em>Grímnismál</em> 20).</li>
+          <li><strong>Mjǫllnir</strong> (modern spelling Mjölnir) — Þórr’s hammer. Hammer-shaped pendants are a genuine Viking-Age find type, mostly 10th century.</li>
+          <li><strong>Valknut</strong> — a modern name; interlaced-triangle motifs appear on Gotlandic picture stones (e.g. Stora Hammars I, Tängelgårda I). The original name and meaning are unknown.</li>
+          <li><strong>Triquetra</strong> — a three-lobed interlace found widely in early medieval art (Insular, Scandinavian and Christian contexts); no fixed Viking-Age meaning is recorded.</li>
+          <li><strong>Longship</strong> — loosely after ships known from burials such as Oseberg and Gokstad (9th–early 10th century).</li>
+          <li><strong>Bifrǫst</strong> — the bridge to the gods’ realm; Snorri describes it as a three-coloured rainbow (<em>Gylfaginning</em>).</li>
+          <li><strong>Runestone path nodes</strong> — after late Viking-Age raised stones (mainly 10th–11th c.), which were originally painted; the red band echoes the serpent bands that carry inscriptions.</li>
+          <li><strong>Rune strips</strong> — the 24 Elder Futhark runes in futhark order, drawn as attested stave shapes. They spell nothing. Esoteric “rune meanings” are modern and are not used here.</li>
+        </ul>
+        <h3>Illustrations (supplied by the user)</h3>
+        <ul class="scholar-list">
+          <li><strong>Yggdrasil</strong> (home) — modern ornamental illustration of the world-tree, hand-tinted for this app in the manner of early colour photographs.</li>
+          <li><strong>Óðinn enthroned</strong> (Section 1) — with ravens, Valknut and Mjǫllnir motifs inside a serpent border. The winged helmet is a 19th-century romantic convention, not Viking-Age gear; the rune ring is decorative, not a verified inscription. The compass-like sign at lower right is the <em>Vegvísir</em>, an early-modern Icelandic magical stave known from 19th-century manuscripts — not a Viking-Age symbol.</li>
+          <li><strong>Horned figure on a cliff</strong> (Section 2) and <strong>horn-blowing warrior</strong> (Section 3) — modern fantasy art. Horned helmets are a modern/romantic depiction; no Viking-Age warrior helmet with horns is known.</li>
+          <li><strong>Mjǫllnir pendants with dragons</strong> (Charter) — modern designs. The winged helmet is romantic; the sign on the lower hammer is the <em>Vegvísir</em>, an early-modern Icelandic stave, not Viking Age.</li>
+          <li><strong>Serpent eye in a knotwork ring</strong> (Elder Futhark) — modern tattoo-style drawing, shown here as a sepia duotone.</li>
+          <li><strong>Forest sage</strong> (Review) — an artistic interpretation of a wise old wanderer with ravens, a fox and fly agaric; not a depiction of any specific god.</li>
+          <li><strong>Óðinn with ravens</strong> (guide portraits) — modern artistic interpretations; the horned helmet is a modern depiction.</li>
+          <li><strong>Horned god with two wolves</strong> (Unit 3 badge) — modern interpretation evoking Óðinn’s wolves Geri and Freki (<em>Grímnismál</em> 19); the horns are a modern depiction.</li>
+        </ul>
+        <p class="muted small">Art credits: all illustrations above were supplied by the user for this app. Ornaments and icons are original drawings made for Norðrœna; nothing is hotlinked.</p>
+      </details>`;
+  }
+
+  /** Visual-only decoration added after render (no content changes). */
+  function drawWindingPaths(app) {
+    $$(".path-track", app).forEach((track) => {
+      const old = $(".wind-svg", track);
+      if (old) old.remove();
+      const nodes = $$(".path-node .node-icon", track);
+      if (nodes.length < 2) return;
+      const tb = track.getBoundingClientRect();
+      const pts = nodes.map((n) => {
+        const r = n.getBoundingClientRect();
+        return [r.left - tb.left + r.width / 2, r.top - tb.top + r.height / 2];
+      });
+      let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+      for (let i = 1; i < pts.length; i++) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+        const my = (y0 + y1) / 2;
+        d += `C${x0.toFixed(1)} ${my.toFixed(1)} ${x1.toFixed(1)} ${my.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`;
+      }
+      track.insertAdjacentHTML("afterbegin",
+        `<svg class="wind-svg" aria-hidden="true" width="${tb.width.toFixed(0)}" height="${tb.height.toFixed(0)}"><path d="${d}" class="wind-glow"/><path d="${d}" class="wind-dots"/></svg>`);
+    });
+  }
+  let windTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(windTimer);
+    windTimer = setTimeout(() => { if (state.view === "home") drawWindingPaths(document); }, 150);
+  });
+
+  function decorate(app) {
+    const art = A();
+    if (!art) return;
+    const main = $("main", app);
+    if (!main) return;
+    const view = state.view;
+    document.body.classList.toggle("in-session", view === "session");
+    const navKey = view === "notes" ? "lesson" : view;
+    $$(".tabbar a", app).forEach((a) => {
+      const on = a.getAttribute("data-nav") === navKey;
+      a.classList.toggle("active", on);
+      if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+    if (view === "home") requestAnimationFrame(() => drawWindingPaths(app));
+    const firstH1 = $("main > article > h1, main > section.panel > h1", app);
+    const banners = {
+      charter: ["mjolnir-knotwork", "50% 46%"],
+      futhark: null,
+      review: ["forest-sage", "50% 30%"]
+    };
+    if (firstH1 && view !== "session") {
+      const b = banners[view];
+      if (b) {
+        firstH1.insertAdjacentHTML("beforebegin", `<div class="page-banner" aria-hidden="true">${art.picture(b[0], "page-banner-img", { pos: b[1] })}<span class="page-banner-shade"></span></div>`);
+      } else if (view === "futhark") {
+        firstH1.insertAdjacentHTML("beforebegin", `<div class="page-medallion" aria-hidden="true">${art.picture("serpent-eye", "medallion-img")}</div>`);
+      } else if (view === "notes" || view === "lesson") {
+        firstH1.insertAdjacentHTML("beforebegin", `<div class="page-banner svg-banner" aria-hidden="true">${art.heroArt()}</div>`);
+      }
+      firstH1.insertAdjacentHTML("afterend", art.knotBand(340, { medallion: true, cls: "h1-knot" }));
+    }
+    if (view === "futhark") {
+      const grid = $(".rune-grid", app);
+      if (grid) grid.insertAdjacentHTML("beforebegin", art.runeStrip("futhark-strip"));
+      // Draw each rune as strokes (Runic font coverage is patchy on phones); the text glyph stays in the DOM.
+      $$(".rune-card .rune-glyph", app).forEach((g) => {
+        const drawn = art.runeSvg(g.textContent, "rune-card-svg");
+        if (drawn) { g.classList.add("has-svg"); g.insertAdjacentHTML("afterend", drawn); }
+      });
+    }
+    if (view === "session") {
+      const intro = $(".intro-card", app);
+      if (intro) {
+        const found = state.levelId && NORDRONA.path.findLevel ? NORDRONA.path.findLevel(state.levelId) : null;
+        const secId = found && found.section ? found.section.id : "s1";
+        intro.insertAdjacentHTML("afterbegin", `<div class="intro-banner" aria-hidden="true">${art.sectionArt(secId, "intro-banner-img")}<span class="page-banner-shade"></span></div>`);
+        const h1 = $("h1", intro);
+        if (h1) h1.insertAdjacentHTML("afterend", art.knotBand(340, { cls: "h1-knot" }));
+      }
+      const fb = $("#sess-feedback", app);
+      if (fb) fb.insertAdjacentHTML("beforebegin", `<div class="guide" aria-hidden="true">${art.picture("odin-ravens-bw", "guide-pic")}</div>`);
+      const speak = $(".speak-block .mic-panel", app);
+      if (speak) speak.insertAdjacentHTML("beforebegin", `<div class="guide-inline" aria-hidden="true">${art.picture("odin-ravens-storm", "guide-pic")}<span>Huginn &amp; Muninn are listening.</span></div>`);
+    }
+    $$(".mic-panel", app).forEach((p) => p.classList.add("carved"));
+    const notesLink = $("[data-art-notes]", app);
+    if (notesLink) {
+      notesLink.addEventListener("click", (e) => {
+        const d = $("#art-notes");
+        if (d) { e.preventDefault(); d.open = true; d.scrollIntoView({ block: "start" }); }
+        else window.__nrOpenArtNotes = true;
+      });
+    }
+    if (window.__nrOpenArtNotes && view === "home") {
+      window.__nrOpenArtNotes = false;
+      const d = $("#art-notes");
+      if (d) { d.open = true; setTimeout(() => d.scrollIntoView({ block: "start" }), 30); }
+    }
+  }
+
   function render() {
     const app = $("#app");
     if (!app) return;
@@ -677,7 +827,8 @@
       app.innerHTML = `
         ${renderHeader()}
         <main class="main session-main">${renderSession()}</main>
-        <footer class="site-footer">Norðrœna · Classical Old Norse · scholarly labels · not Modern Icelandic</footer>`;
+        <footer class="site-footer">${A().knotBand(300, { cls: "foot-knot" })}Norðrœna · Classical Old Norse · scholarly labels · not Modern Icelandic${artCredit()}</footer>`;
+      decorate(app);
       bindSessionHandlers(app);
       return;
     }
@@ -693,8 +844,9 @@
     app.innerHTML = `
       ${renderHeader()}
       <main class="main">${main}</main>
-      <footer class="site-footer">Norðrœna · Classical Old Norse path · ATTESTED / NORMALIZED / RECONSTRUCTED · not Modern Icelandic</footer>`;
+      <footer class="site-footer">${A().knotBand(300, { cls: "foot-knot" })}Norðrœna · Classical Old Norse path · ATTESTED / NORMALIZED / RECONSTRUCTED · not Modern Icelandic${artCredit()}</footer>`;
 
+    decorate(app);
     bindTts(app);
     bindMic(app);
 

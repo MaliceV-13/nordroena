@@ -1,0 +1,262 @@
+{
+ "maðr": {
+  "slug": "madr",
+  "ipa": "ˈmaðr̩",
+  "modelPhonemes": "mˈaðər.",
+  "asrHeard": "m a h a",
+  "asrPER": 0.5,
+  "durNormal": 1.07,
+  "durSlow": 1.26,
+  "app": true
+ },
+ "kona": {
+  "slug": "kona",
+  "ipa": "ˈkona",
+  "modelPhonemes": "kˈona.",
+  "asrHeard": "k a n n ɑ",
+  "asrPER": 0.5,
+  "durNormal": 1.16,
+  "durSlow": 1.34,
+  "app": true
+ },
+ "land": {
+  "slug": "land",
+  "ipa": "ˈland",
+  "modelPhonemes": "lˈandː.",
+  "asrHeard": "l a n t ə",
+  "asrPER": 0.25,
+  "durNormal": 1.07,
+  "durSlow": 1.39,
+  "app": true
+ },
+ "vera": {
+  "slug": "vera",
+  "ipa": "ˈwera",
+  "modelPhonemes": "wˈɛra.",
+  "asrHeard": "h a r a",
+  "asrPER": 0.5,
+  "durNormal": 1.1,
+  "durSlow": 1.25,
+  "app": true
+ },
+ "heita": {
+  "slug": "heita",
+  "ipa": "ˈheita",
+  "modelPhonemes": "hˈeɪta.",
+  "asrHeard": "h e t a",
+  "asrPER": 0.2,
+  "durNormal": 1.2,
+  "durSlow": 1.44,
+  "app": true
+ },
+ "þ": {
+  "slug": "thorn",
+  "ipa": "θ",
+  "modelPhonemes": "θː, θː.",
+  "asrHeard": "",
+  "asrPER": 0.0,
+  "durNormal": 1.09,
+  "durSlow": 1.24,
+  "app": true
+ },
+ "ð": {
+  "slug": "eth",
+  "ipa": "ð",
+  "modelPhonemes": "ðː, ðː.",
+  "asrHeard": "",
+  "asrPER": 0.0,
+  "durNormal": 1.01,
+  "durSlow": 1.17,
+  "app": true
+ },
+ "ǫ": {
+  "slug": "o-ogonek",
+  "ipa": "ɔ",
+  "modelPhonemes": "ˈɔː, ˈɔː.",
+  "asrHeard": "",
+  "asrPER": 0.0,
+  "durNormal": 1.39,
+  "durSlow": 1.71,
+  "app": true
+ },
+ "a — á": {
+  "slug": "a-vs-aa",
+  "ipa": "a — aː",
+  "modelPhonemes": "ˈa, ˈaːː.",
+  "asrHeard": "ɑ l a",
+  "asrPER": 0.5,
+  "durNormal": 1.17,
+  "durSlow": 1.37,
+  "app": true
+ },
+ "Þórr": {
+  "slug": "thorr",
+  "ipa": "ˈθoːrː",
+  "modelPhonemes": "θˈoːːr.",
+  "asrHeard": "θ oː r",
+  "asrPER": 0.0,
+  "durNormal": 1.25,
+  "durSlow": 1.47,
+  "app": true
+ },
+ "Óðinn": {
+  "slug": "odinn",
+  "ipa": "ˈoːðinː",
+  "modelPhonemes": "ˈoːːðinː.",
+  "asrHeard": "oː ð i i",
+  "asrPER": 0.25,
+  "durNormal": 1.12,
+  "durSlow": 1.46,
+  "app": true
+ },
+ "þú": {
+  "slug": "thu",
+  "ipa": "ˈθuː",
+  "modelPhonemes": "θθˈuː.",
+  "asrHeard": "θ uː",
+  "asrPER": 0.0,
+  "durNormal": 1.01,
+  "durSlow": 1.09,
+  "app": false
+ },
+ "ðér": {
+  "slug": "ther",
+  "ipa": "ˈðeːr",
+  "modelPhonemes": "ðˈɛːr.",
+  "asrHeard": "θ eː r",
+  "asrPER": 0.333,
+  "durNormal": 0.93,
+  "durSlow": 1.03,
+  "app": false
+ },
+ "hǫnd": {
+  "slug": "hond",
+  "ipa": "ˈhɔnd",
+  "modelPhonemes": "hˈɔnd.",
+  "asrHeard": "h o n t ə",
+  "asrPER": 0.5,
+  "durNormal": 1.16,
+  "durSlow": 1.44,
+  "app": false
+ },
+ "guð": {
+  "slug": "gud",
+  "ipa": "ˈɡuð",
+  "modelPhonemes": "ɡˈuð.",
+  "asrHeard": "uː ð",
+  "asrPER": 0.333,
+  "durNormal": 1.05,
+  "durSlow": 1.18,
+  "app": false
+ },
+ "fjǫrðr": {
+  "slug": "fjordr",
+  "ipa": "ˈfjɔrðr̩",
+  "modelPhonemes": "fjˈɔrðər.",
+  "asrHeard": "f j ɔ r ð r",
+  "asrPER": 0.0,
+  "durNormal": 1.37,
+  "durSlow": 1.64,
+  "app": false
+ },
+ "hlæja": {
+  "slug": "hlaeja",
+  "ipa": "ˈhlɛːja",
+  "modelPhonemes": "hˈlɛːja.",
+  "asrHeard": "h eː j a",
+  "asrPER": 0.4,
+  "durNormal": 0.95,
+  "durSlow": 1.14,
+  "app": false
+ },
+ "skógr": {
+  "slug": "skogr",
+  "ipa": "ˈskoːɣr̩",
+  "modelPhonemes": "skˈoːɣər.",
+  "asrHeard": "s oː ɡ r ə",
+  "asrPER": 0.4,
+  "durNormal": 1.15,
+  "durSlow": 1.5,
+  "app": false
+ },
+ "øx": {
+  "slug": "ox",
+  "ipa": "ˈøks",
+  "modelPhonemes": "ˈøks.",
+  "asrHeard": "ɛ k s",
+  "asrPER": 0.333,
+  "durNormal": 1.15,
+  "durSlow": 1.34,
+  "app": false
+ },
+ "ætt": {
+  "slug": "aett",
+  "ipa": "ˈɛːtː",
+  "modelPhonemes": "ˈɛːtt.",
+  "asrHeard": "ɛ t",
+  "asrPER": 0.0,
+  "durNormal": 1.04,
+  "durSlow": 1.24,
+  "app": false
+ },
+ "nótt": {
+  "slug": "nott",
+  "ipa": "ˈnoːtː",
+  "modelPhonemes": "nˈoːtː.",
+  "asrHeard": "n oː t eː",
+  "asrPER": 0.333,
+  "durNormal": 1.25,
+  "durSlow": 1.57,
+  "app": false
+ },
+ "bróðir": {
+  "slug": "brodir",
+  "ipa": "ˈbroːðir",
+  "modelPhonemes": "brˈoːðir.",
+  "asrHeard": "p r ɔ ð i ɾ",
+  "asrPER": 0.333,
+  "durNormal": 1.19,
+  "durSlow": 1.41,
+  "app": false
+ },
+ "mjǫk": {
+  "slug": "mjok",
+  "ipa": "ˈmjɔk",
+  "modelPhonemes": "mmjˈɔk.",
+  "asrHeard": "m i ɔ k",
+  "asrPER": 0.25,
+  "durNormal": 1.02,
+  "durSlow": 1.33,
+  "app": false
+ },
+ "dagr": {
+  "slug": "dagr",
+  "ipa": "ˈdaɣr̩",
+  "modelPhonemes": "dˈaɣər.",
+  "asrHeard": "f a r r a",
+  "asrPER": 0.75,
+  "durNormal": 1.19,
+  "durSlow": 1.44,
+  "app": false
+ },
+ "Ek heiti Óðinn. Hvat heitir þú?": {
+  "slug": "phrase-ek-heiti",
+  "ipa": "ek ˈheiti ˈoːðinː ‖ ˈhwat ˈheitir ˈθuː",
+  "modelPhonemes": "ɛk hˈeɪti ˈoːðinː, hwˈat hˈeɪtir θˈuː.",
+  "asrHeard": "ɛ h eː t i oː ð i n i h a t h eː t i r θ uː",
+  "asrPER": 0.261,
+  "durNormal": 3.06,
+  "durSlow": 4.18,
+  "app": false
+ },
+ "Deyr fé, deyja frændr": {
+  "slug": "phrase-deyr-fe",
+  "ipa": "ˈdøyr ˈfeː ‖ ˈdøyja ˈfrɛːndr̩",
+  "modelPhonemes": "dˈœyr fˈeː, dˈœyja frˈɛːndʏr.",
+  "asrHeard": "d ø ø r f eː d ɔɨ j a f r ɛ n d ə r",
+  "asrPER": 0.176,
+  "durNormal": 3.03,
+  "durSlow": 3.94,
+  "app": false
+ }
+}

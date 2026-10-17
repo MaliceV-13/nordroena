@@ -70,10 +70,25 @@
 
   function ttsMini(form, clearSpeak) {
     const T = N().tts;
-    if (!T || !T.available()) {
+    const pron = T && T.getPron ? T.getPron(form) : null;
+    if (!T || (!T.available() && !(pron && pron.src))) {
       return `<p class="muted">TTS unavailable — use clear cue: <code>${escapeHtml(clearSpeak || form)}</code></p>`;
     }
     const clear = clearSpeak || (T.buildClearCue && T.buildClearCue(form)) || form;
+    if (pron && pron.src) {
+      return `
+      <div class="tts-box compact has-recon" data-speak-text="${escapeHtml(form)}" data-speak-clear="${escapeHtml(clear)}">
+        <p class="tts-ipa"><span class="label reconstructed">Reconstructed</span> <span class="ipa" lang="und-fonipa">[${escapeHtml(pron.ipa)}]</span></p>
+        ${T.RECON_NOTE_HTML || ""}
+        <p class="tts-cue muted"><strong>Clear cue:</strong> <code>${escapeHtml(clear)}</code></p>
+        <div class="tts-actions">
+          <button type="button" class="btn play tts-play-clear">▶ Play reconstructed</button>
+          <button type="button" class="btn ghost tts-slow">Play slow (0.7×)</button>
+          <button type="button" class="btn ghost tts-ortho">Orthography</button>
+          <button type="button" class="btn ghost tts-stop">Stop</button>
+        </div>
+      </div>`;
+    }
     return `
       <div class="tts-box compact" data-speak-text="${escapeHtml(form)}" data-speak-clear="${escapeHtml(clear)}">
         ${T.DISCLAIMER_HTML || '<p class="tts-disclaimer">MODERN APPROXIMATION — NOT historical Old Norse speech</p>'}

@@ -22,6 +22,79 @@
 
   let lastVoiceInfo = { name: null, lang: null, mode: DEFAULT_MODE };
 
+  /* ── Pre-generated reconstructed audio (data/pronunciation.js) ──
+     One shared <audio> element, unlocked on the first tap so iOS Safari will play it.
+     speechSynthesis is only a fallback for strings without a file. */
+  const SILENT_MP3 = "data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYxLjcuMTAzAAAAAAAAAAAAAAD/83DAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAACWAB6enp6enp6enp6enp6enp6enp6enp6enqmpqampqampqampqampqampqampqampqam09PT09PT09PT09PT09PT09PT09PT09PT0/////////////////////////////////8AAAAATGF2YzYxLjE5AAAAAAAAAAAAAAAAJAJxAAAAAAAAAlj7+meXAAAAAAAAAAAAAAAAAP/zQMQAAAADSAAAAABMQU1FMy4xMDBVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxFsAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=";
+  let audioEl = null;
+  let audioUnlocked = false;
+
+  function pronItems() {
+    const P = global.NORDRONA && global.NORDRONA.pron;
+    return (P && P.items) || {};
+  }
+  function getPron(text) {
+    const items = pronItems();
+    const k = String(text == null ? "" : text).normalize("NFC").trim();
+    return items[k] || items[k.toLowerCase()] || null;
+  }
+  function hasAudio(text) {
+    const p = getPron(text);
+    return !!(p && p.src);
+  }
+  function getAudioEl() {
+    if (!audioEl) {
+      audioEl = new Audio();
+      audioEl.preload = "auto";
+      audioEl.setAttribute("playsinline", "");
+    }
+    return audioEl;
+  }
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    try {
+      const el = getAudioEl();
+      if (el.src && el.src !== SILENT_MP3 && !el.paused) return;
+      el.src = SILENT_MP3;
+      const p = el.play();
+      if (p && p.catch) p.catch(() => { audioUnlocked = false; });
+    } catch (e) { audioUnlocked = false; }
+  }
+  if (global.document) {
+    ["touchend", "pointerdown", "keydown"].forEach((ev) =>
+      global.document.addEventListener(ev, unlockAudio, { once: true, capture: true, passive: true })
+    );
+  }
+
+  /** Play the pre-generated file for `text` (normal or 0.7x slow). Call synchronously from the tap handler (iOS). */
+  function playReconstructed(text, slow) {
+    const p = getPron(text);
+    if (!p || !p.src) return null;
+    audioUnlocked = true;
+    if (available()) speechSynthesis.cancel();
+    const el = getAudioEl();
+    el.pause();
+    el.src = slow && p.slow ? p.slow : p.src;
+    el.playbackRate = 1;
+    lastVoiceInfo = { name: "Reconstructed pronunciation (synthesized)", lang: "non", mode: slow ? "reconstructed-slow" : "reconstructed" };
+    const started = el.play();
+    return new Promise((resolve) => {
+      const done = (ok, reason) => {
+        el.removeEventListener("ended", onEnd);
+        el.removeEventListener("error", onErr);
+        el.removeEventListener("pause", onEnd);
+        resolve({ ok, reason, mode: lastVoiceInfo.mode, src: el.currentSrc || el.src, ipa: p.ipa });
+      };
+      const onEnd = () => done(true);
+      const onErr = () => done(false, "audio-error");
+      el.addEventListener("ended", onEnd);
+      el.addEventListener("error", onErr);
+      el.addEventListener("pause", onEnd);
+      if (started && started.catch) started.catch((e) => done(false, (e && e.name) || "play-blocked"));
+    });
+  }
+
   function available() {
     return !!(global.speechSynthesis && global.SpeechSynthesisUtterance);
   }
@@ -438,9 +511,12 @@
 
   function stop() {
     if (available()) speechSynthesis.cancel();
+    if (audioEl) { try { audioEl.pause(); audioEl.currentTime = 0; } catch (e) {} }
   }
 
   function speakClear(onText, clearCue, opts) {
+    const rec = playReconstructed(onText, false);
+    if (rec) return rec;
     return speak(
       Object.assign({}, opts || {}, {
         onText,
@@ -452,6 +528,8 @@
   }
 
   function speakSlow(onText, clearCue, opts) {
+    const rec = playReconstructed(onText, true);
+    if (rec) return rec;
     return speak(
       Object.assign({}, opts || {}, {
         onText,
@@ -464,6 +542,7 @@
   }
 
   function speakOrtho(onText, opts) {
+    if (audioEl) { try { audioEl.pause(); } catch (e) {} }
     return speak(
       Object.assign({}, opts || {}, {
         onText,
@@ -479,6 +558,9 @@
 
   const DISCLAIMER_HTML =
     '<p class="tts-disclaimer"><strong>MODERN APPROXIMATION — NOT historical Old Norse speech.</strong> Clear playback uses English phonetic cues for intelligibility (not historical ON). Orthography mode reads raw letters with a modern Nordic/English voice. Compare with reconstructed IPA/notes.</p>';
+
+  const RECON_NOTE_HTML =
+    '<p class="tts-disclaimer recon"><strong>Reconstructed pronunciation (synthesized).</strong> A generic synthetic voice reads the reconstructed IPA of Classical Old West Norse (c. 1200, normalized spelling). It is not a recording, not a real person’s voice, and not Modern Icelandic. The conventions follow mainstream scholarship, such as that taught by Old Norse specialists like Dr. Jackson Crawford; no endorsement is implied. Trust the IPA where the voice falls short. <em>Orthography</em> still uses your browser’s modern voice.</p>';
 
   const CLEAR_NOTE_HTML =
     '<p class="tts-clear-note muted">Clear playback uses English phonetic cues for intelligibility; compare with reconstructed notes. Cues are pedagogical approximations — not claims of historical Old Norse speech.</p>';
@@ -504,7 +586,12 @@
     stop,
     getLastVoiceInfo,
     DISCLAIMER_HTML,
+    RECON_NOTE_HTML,
     CLEAR_NOTE_HTML,
+    getPron,
+    hasAudio,
+    playReconstructed,
+    unlockAudio,
     MIN_RATE,
     MAX_RATE,
     DEFAULT_RATE,

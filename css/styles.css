@@ -966,3 +966,7 @@ input[type="radio"], input[type="checkbox"] { accent-color: #c3932f; }
 .path-node.locked .node-icon { background: radial-gradient(circle, #3e4044, #2a2b2e 70%); }
 .path-node.locked .node-type, .path-node.locked .node-title { opacity: 0.6; }
 .page-banner img { filter: grayscale(0.45) sepia(0.12) contrast(1.03); }
+
+/* Reconstructed pronunciation (IPA + synthesized audio) */
+.tts-ipa { margin: 0 0 0.45rem; display: flex; align-items: center; flex-wrap: wrap; gap: 0.45rem; }
+.tts-ipa .ipa { font-family: "Charis SIL", "Doulos SIL", "Gentium Plus", "Noto Serif", "Iowan Old Style", "Times New Roman", serif; font-size: 1.15rem; letter-spacing: 0.02em; }

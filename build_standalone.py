@@ -17,6 +17,7 @@ SCRIPTS = [
     "data/lesson2.js",
     "data/lesson3.js",
     "data/futhark.js",
+    "data/pronunciation.js",
     "js/art.js",
     "js/progress.js",
     "js/exercises.js",
@@ -27,7 +28,7 @@ SCRIPTS = [
     "js/app.js",
 ]
 
-MIME = {".woff2": "font/woff2", ".webp": "image/webp", ".jpg": "image/jpeg", ".png": "image/png", ".svg": "image/svg+xml"}
+MIME = {".mp3": "audio/mpeg", ".woff2": "font/woff2", ".webp": "image/webp", ".jpg": "image/jpeg", ".png": "image/png", ".svg": "image/svg+xml"}
 
 def data_uri(path: Path) -> str:
     return f"data:{MIME[path.suffix]};base64," + base64.b64encode(path.read_bytes()).decode("ascii")
@@ -35,7 +36,9 @@ def data_uri(path: Path) -> str:
 def inline_assets(text: str) -> str:
     """Replace relative font/image references with base64 data URIs (offline single file)."""
     text = text.replace('url("../fonts/cinzel-subset.woff2")', f'url("{data_uri(ROOT / "fonts" / "cinzel-subset.woff2")}")')
-    return re.sub(r'"img/([a-z0-9-]+\.(?:webp|jpg))"', lambda m: '"' + data_uri(ROOT / "img" / m.group(1)) + '"', text)
+    text = re.sub(r'"img/([a-z0-9-]+\.(?:webp|jpg))"', lambda m: '"' + data_uri(ROOT / "img" / m.group(1)) + '"', text)
+    # reconstructed-pronunciation audio (small mono MP3s) so the single file works offline
+    return re.sub(r'"audio/([a-z0-9-]+\.mp3)"', lambda m: '"' + data_uri(ROOT / "audio" / m.group(1)) + '"', text)
 
 def build_html() -> str:
     css = inline_assets(CSS.read_text(encoding="utf-8"))

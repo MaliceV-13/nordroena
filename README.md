@@ -82,6 +82,23 @@ python3 build_standalone.py
 
 Stored in `localStorage` key `nordrona_progress_v2`: completed levels, XP, streak day, review queue. Reset from the path home footer.
 
+## Reconstructed pronunciation (synthesized audio)
+
+Every string the app speaks (11 items: maðr, kona, land, vera, heita, þ, ð, ǫ, a — á, Þórr, Óðinn) plus 13 reference
+words and 2 phrases has hand-written IPA for Classical Old West Norse (c. 1200, normalized), in `tools/pron_items.py`.
+The IPA is shown beside the word, labelled **Reconstructed**. Conventions: first-syllable stress, long vowels held,
+double consonants held long, rolled r with syllabic final -r after a consonant (maðr [ˈmaðr̩]), s always [s],
+þ [θ], ð [ð], ǫ [ɔ], f between vowels [v], medial g [ɣ], and v written [w] throughout. These follow mainstream
+scholarly conventions, such as those taught by Old Norse specialists like Dr. Jackson Crawford; no endorsement is
+implied, and no recording of any person was used.
+
+Audio (`audio/*.mp3`, normal plus a 0.7× slow version) is generated **from the IPA, not the spelling** by
+`tools/gen_audio.py`. It uses Piper VITS with the generic synthetic voice `is_IS-steinn-medium`, pitched down one
+semitone, with light EQ and de-essing, silence trimmed, normalized loudness, and mono 48 kbps output. `js/tts.js`
+plays the file when one exists and falls back to the browser's speechSynthesis otherwise. Audio is unlocked on the
+first tap for iOS Safari. The standalone HTML embeds all clips, so it works offline. The audio is labelled
+"Reconstructed pronunciation (synthesized)": it is a model, not historical speech.
+
 ## Clear vs Orthography (TTS)
 
 - **Clear mode (default):** English-friendly phonetic cues — pedagogical approximations, **not** historical ON.  

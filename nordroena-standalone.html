@@ -1,0 +1,4725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1210" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="description" content="Norðrœna — progressive path course in historical Old West Norse / Classical normalized Old Norse. Not Modern Icelandic." />
+  <title>Norðrœna — Old Norse Path</title>
+  <style>
+/* Norðrœna — dark scholarly UI (parchment/ink, nordic restraint) */
+:root {
+  --bg: #0f1210;
+  --bg-elev: #171c18;
+  --panel: #1c231e;
+  --ink: #e8e0d0;
+  --ink-dim: #a89f8e;
+  --parchment: #c4b59a;
+  --accent: #8b9a6d;
+  --accent-2: #c9a227;
+  --warn: #c47a4a;
+  --ok: #6d9a7a;
+  --bad: #b85c5c;
+  --line: #2a332c;
+  --radius: 12px;
+  --font: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Cambria Math", "Times New Roman", ui-monospace, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background:
+    radial-gradient(ellipse at top, #1a221c 0%, var(--bg) 55%),
+    var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--parchment); }
+
+#app { max-width: 920px; margin: 0 auto; padding: 0 1rem 3rem; }
+
+.site-header {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 0.75rem; padding: 1rem 0 1.25rem; border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(15, 18, 16, 0.92); backdrop-filter: blur(8px);
+}
+.brand { display: flex; align-items: center; gap: 0.65rem; color: inherit; text-decoration: none; }
+.brand-mark {
+  width: 2.4rem; height: 2.4rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(145deg, #2a332c, #121612);
+  border: 1px solid var(--accent-2); color: var(--accent-2);
+  font-size: 1.25rem;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-text strong { font-size: 1.15rem; letter-spacing: 0.02em; }
+.brand-text small { color: var(--ink-dim); font-family: var(--sans); font-size: 0.72rem; }
+.nav { display: flex; flex-wrap: wrap; gap: 0.65rem 1rem; font-family: var(--sans); font-size: 0.88rem; }
+.nav a { color: var(--ink-dim); text-decoration: none; }
+.nav a:hover { color: var(--parchment); }
+
+.main { padding-top: 1.5rem; }
+.hero { padding: 1.5rem 0 2rem; }
+.eyebrow { font-family: var(--sans); text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.72rem; color: var(--accent-2); margin: 0 0 0.5rem; }
+.hero h1, .lesson-head h1, .prose h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 600; margin: 0 0 0.75rem; color: var(--parchment); }
+.lede { font-size: 1.1rem; color: var(--ink-dim); max-width: 40rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
+  font-family: var(--sans); font-size: 0.9rem;
+  padding: 0.55rem 1rem; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--bg-elev); color: var(--ink);
+  cursor: pointer; text-decoration: none;
+}
+.btn:hover { border-color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.primary { background: linear-gradient(180deg, #3a4a35, #2a3528); border-color: var(--accent); color: #f0ebe0; }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+.btn.recording, .btn.record-btn.recording { background: #5a2a2a; border-color: var(--bad); animation: pulse 1.2s infinite; }
+@keyframes pulse { 50% { opacity: 0.75; } }
+
+.panel, .lesson-section, .vocab-card, .review-card, .chrono-card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.1rem 1.2rem; margin: 1rem 0;
+}
+.prose h2, .lesson-section h2, .panel h1, .panel h2 { color: var(--parchment); }
+.muted { color: var(--ink-dim); font-size: 0.95rem; }
+.scholar-list { padding-left: 1.2rem; }
+.scholar-list li { margin: 0.4rem 0; }
+
+.callout {
+  border-radius: var(--radius); padding: 0.85rem 1rem; margin: 1rem 0;
+  border: 1px solid var(--line); background: var(--bg-elev);
+}
+.callout.warn { border-color: rgba(196, 122, 74, 0.55); background: #241a14; }
+.callout.info { border-color: rgba(139, 154, 109, 0.45); background: #161b16; }
+.callout.tight { padding: 0.6rem 0.75rem; font-size: 0.92rem; }
+.callout strong { display: block; margin-bottom: 0.35rem; color: var(--warn); }
+.callout.info strong { color: var(--accent); }
+
+.label {
+  display: inline-block; font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 0.15rem 0.45rem; border-radius: 4px;
+  border: 1px solid var(--line); vertical-align: middle;
+}
+.label.attested { color: #b7d4be; border-color: #3d5a45; }
+.label.normalized { color: #c9c0a0; border-color: #5a5340; }
+.label.reconstructed { color: #c4a0b8; border-color: #5a4050; }
+.label.uncertain { color: #c4b0a0; border-color: #5a4a40; }
+
+.letter-grid, .vocab-grid, .rune-grid, .chrono-grid {
+  display: grid; gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  margin: 1rem 0;
+}
+.vocab-grid { grid-template-columns: 1fr; }
+@media (min-width: 640px) {
+  .vocab-grid { grid-template-columns: 1fr 1fr; }
+  .rune-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+.letter-card, .rune-card {
+  background: var(--bg-elev); border: 1px solid var(--line); border-radius: 10px;
+  padding: 0.75rem; display: flex; flex-direction: column; gap: 0.2rem;
+}
+.letter-card .glyph, .rune-glyph {
+  font-size: 2rem; color: var(--accent-2); font-family: var(--mono); line-height: 1.2;
+}
+.letter-card .name, .rune-name { font-family: var(--sans); font-size: 0.8rem; color: var(--parchment); }
+.letter-card .ipa, .rune-value { font-size: 0.85rem; color: var(--accent); }
+.letter-card .note, .rune-note { font-size: 0.78rem; }
+
+.lemma { font-size: 1.45rem; color: var(--accent-2); margin-right: 0.5rem; }
+.vocab-card header { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin-bottom: 0.35rem; }
+.grammar { font-size: 0.92rem; }
+
+.tts-box {
+  margin-top: 0.75rem; padding: 0.75rem; border-radius: 10px;
+  background: #141914; border: 1px dashed var(--line);
+}
+.tts-disclaimer { font-family: var(--sans); font-size: 0.78rem; color: var(--warn); margin: 0 0 0.6rem; }
+.tts-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem; }
+.rate-label {
+  display: flex; align-items: center; gap: 0.5rem; font-family: var(--sans); font-size: 0.8rem; color: var(--ink-dim);
+}
+.tts-rate { flex: 1; max-width: 220px; }
+.tts-clear-note { font-family: var(--sans); font-size: 0.78rem; margin: 0 0 0.4rem; }
+.tts-cue { font-family: var(--sans); font-size: 0.8rem; margin: 0 0 0.5rem; }
+.tts-cue code { color: var(--accent-2); font-size: 0.85rem; }
+.tts-voice { font-family: var(--sans); font-size: 0.75rem; margin: 0.35rem 0 0; }
+.recon-notes { font-size: 0.85rem; color: var(--ink-dim); margin: 0.5rem 0 0; }
+
+.roadmap { list-style: none; padding: 0; margin: 0; }
+.roadmap li {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: center;
+  padding: 0.65rem 0; border-bottom: 1px solid var(--line); font-family: var(--sans); font-size: 0.92rem;
+}
+.rm-num {
+  font-weight: 600; color: var(--accent-2); min-width: 2rem;
+}
+.rm-status { color: var(--ink-dim); font-size: 0.75rem; text-transform: uppercase; }
+
+.lesson-list { list-style: none; padding: 0; }
+.lesson-list li {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem;
+  padding: 0.9rem 0; border-bottom: 1px solid var(--line);
+}
+.lesson-list li.locked { opacity: 0.7; }
+.chip {
+  font-family: var(--sans); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 0.15rem 0.4rem; border-radius: 4px; border: 1px solid var(--line); margin-left: 0.35rem; color: var(--ink-dim);
+}
+.chip.ok { color: var(--ok); border-color: #3d5a45; }
+.chip.lock { color: var(--warn); }
+
+.exercises-section h2, .exercises-section h3 { color: var(--parchment); }
+.ex-block {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1rem; margin: 1rem 0; background: var(--bg-elev);
+}
+.ex-block legend { padding: 0 0.35rem; color: var(--parchment); font-weight: 600; }
+.choices { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.75rem 0; }
+.choice {
+  display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.45rem 0.55rem;
+  border-radius: 8px; border: 1px solid transparent; font-family: var(--sans); font-size: 0.92rem;
+}
+.choice:hover { border-color: var(--line); background: var(--panel); }
+.text-answer {
+  width: 100%; max-width: 28rem; padding: 0.55rem 0.7rem; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink); font-size: 1rem;
+  font-family: var(--mono);
+}
+.ex-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.ex-feedback { margin-top: 0.75rem; padding: 0.65rem 0.75rem; border-radius: 8px; font-family: var(--sans); font-size: 0.9rem; }
+.ex-feedback.ok { background: #1a2a20; border: 1px solid #3d5a45; }
+.ex-feedback.bad { background: #2a1a1a; border: 1px solid #5a3d3d; }
+.ex-feedback .hint { color: var(--ink-dim); }
+.progress-line { font-family: var(--sans); font-size: 0.85rem; color: var(--ink-dim); }
+
+.speak-target { margin: 0.35rem 0; }
+.mic-panel { margin: 0.75rem 0; padding: 0.75rem; border-radius: 10px; background: #121612; border: 1px solid var(--line); }
+.mic-explain { font-family: var(--sans); font-size: 0.82rem; color: var(--ink-dim); }
+.mic-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; }
+.self-rate-box { margin-top: 0.75rem; }
+.self-rate-box h4 { margin: 0 0 0.5rem; color: var(--parchment); font-size: 0.95rem; }
+.check-item { display: flex; gap: 0.45rem; align-items: flex-start; font-family: var(--sans); font-size: 0.88rem; margin: 0.3rem 0; }
+.rubric { font-size: 0.85rem; color: var(--ink-dim); }
+.playback { width: 100%; margin-top: 0.5rem; }
+.asr-out { font-family: var(--sans); font-size: 0.82rem; margin-top: 0.5rem; }
+
+.table-wrap { overflow-x: auto; }
+.side-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; font-family: var(--sans); }
+.side-table th, .side-table td { border: 1px solid var(--line); padding: 0.55rem; vertical-align: top; }
+.side-table th { background: var(--bg-elev); color: var(--parchment); text-align: left; }
+
+.chrono-grid { grid-template-columns: 1fr; }
+@media (min-width: 700px) { .chrono-grid { grid-template-columns: 1fr 1fr; } }
+
+.label-legend { list-style: none; padding: 0; }
+.label-legend li { margin: 0.5rem 0; }
+
+.site-footer {
+  margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line);
+  font-family: var(--sans); font-size: 0.75rem; color: var(--ink-dim); text-align: center;
+}
+.lesson-foot { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+
+code { font-family: var(--mono); color: var(--accent-2); }
+details summary { cursor: pointer; color: var(--accent); font-family: var(--sans); }
+
+@media (max-width: 480px) {
+  .nav { width: 100%; justify-content: space-between; }
+  .btn { width: auto; }
+}
+
+/* ——— Path map (scholarly parchment / ink — not Duolingo green) ——— */
+.path-header .stat-pills {
+  display: flex; gap: 0.5rem; font-family: var(--sans); font-size: 0.8rem;
+}
+.pill {
+  padding: 0.25rem 0.65rem; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--bg-elev); color: var(--parchment);
+}
+.pill.streak { border-color: rgba(201, 162, 39, 0.4); }
+.pill.xp { border-color: rgba(139, 154, 109, 0.45); }
+
+.path-hero { padding: 1.25rem 0 1.5rem; }
+.continue-cta { font-weight: 600; }
+.center { text-align: center; }
+
+.path-section {
+  margin: 2rem 0; padding: 1.25rem 1rem 1.5rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: linear-gradient(180deg, #1a211c 0%, var(--panel) 40%);
+}
+.path-section.coming-soon { opacity: 0.72; }
+.path-section-head h2 { margin: 0.2rem 0; color: var(--parchment); }
+
+.unit-banner {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: baseline;
+  font-family: var(--sans); font-size: 0.9rem;
+  padding: 0.65rem 0.85rem; margin: 1rem 0 0.75rem;
+  border-radius: 10px;
+  background: #141914; border: 1px solid rgba(201, 162, 39, 0.35);
+  color: var(--ink);
+}
+.unit-banner strong { color: var(--accent-2); }
+
+.path-track {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0; padding: 0.5rem 0 1rem; position: relative;
+}
+
+.path-node-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; max-width: 320px; position: relative;
+}
+.path-node-wrap.left { align-items: flex-start; padding-left: 8%; }
+.path-node-wrap.right { align-items: flex-end; padding-right: 8%; }
+
+.path-connector {
+  width: 3px; height: 1.1rem;
+  background: linear-gradient(180deg, var(--accent-2), var(--accent));
+  opacity: 0.55; border-radius: 2px;
+  margin: 0 auto;
+}
+.path-node-wrap.left .path-connector,
+.path-node-wrap.right .path-connector { margin-left: 2.1rem; margin-right: 2.1rem; }
+
+.path-node {
+  display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto;
+  gap: 0.1rem 0.65rem; align-items: center;
+  min-width: 11rem; max-width: 16rem;
+  padding: 0.65rem 0.85rem 0.65rem 0.65rem;
+  border-radius: 999px 16px 16px 999px;
+  text-decoration: none; color: inherit;
+  background: var(--bg-elev);
+  border: 2px solid var(--line);
+  box-shadow: 0 4px 0 #0a0c0a;
+  transition: transform 0.12s ease, border-color 0.12s;
+  font-family: var(--sans);
+  position: relative;
+}
+.path-node:hover:not(.locked) {
+  transform: translateY(-2px);
+  border-color: var(--accent-2);
+}
+.path-node .node-icon {
+  grid-row: 1 / span 2;
+  width: 2.6rem; height: 2.6rem; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 1.15rem; font-family: var(--mono);
+  background: #121612; border: 1px solid var(--accent);
+  color: var(--accent-2);
+}
+.path-node .node-type {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-dim);
+}
+.path-node .node-title { font-size: 0.88rem; color: var(--parchment); font-weight: 600; }
+.path-node .node-check {
+  position: absolute; top: -0.35rem; right: -0.2rem;
+  background: var(--ok); color: #0f1210; font-size: 0.7rem;
+  width: 1.2rem; height: 1.2rem; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 700;
+}
+.path-node .node-cta {
+  grid-column: 2; font-size: 0.7rem; color: var(--accent-2);
+}
+.path-node.current {
+  border-color: var(--accent-2);
+  box-shadow: 0 4px 0 #3a3010, 0 0 0 3px rgba(201, 162, 39, 0.2);
+}
+.path-node.done {
+  border-color: #3d5a45;
+  background: #1a2420;
+}
+.path-node.done .node-icon { border-color: var(--ok); color: var(--ok); }
+.path-node.locked {
+  opacity: 0.45; cursor: not-allowed;
+  box-shadow: none;
+}
+.path-node.type-checkpoint .node-icon { border-color: var(--accent-2); }
+.path-node.type-lore .node-icon { border-color: var(--parchment); }
+.path-node.type-speak .node-icon { border-color: #7a8ab0; color: #a8b4d0; }
+.path-node.type-listen .node-icon { border-color: #8a7a9a; color: #c4b0d4; }
+.path-node.type-practice .node-icon { border-color: var(--accent); }
+
+.side-paths { margin: 2rem 0; }
+.side-path-card {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1rem 1.1rem; border-radius: var(--radius);
+  border: 1px dashed var(--accent-2); background: #161410;
+  text-decoration: none; color: inherit;
+}
+.side-path-card:hover { border-style: solid; }
+.side-glyph {
+  font-size: 2rem; color: var(--accent-2); line-height: 1;
+}
+.side-path-card .small { font-size: 0.8rem; }
+
+/* ——— Session UI ——— */
+.session-main { max-width: 560px; margin: 0 auto; }
+.session-view { display: flex; flex-direction: column; min-height: 70vh; }
+.sess-top {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.5rem 0 1rem; position: sticky; top: 0;
+  background: rgba(15, 18, 16, 0.95); z-index: 5;
+}
+.sess-bar {
+  flex: 1; height: 10px; border-radius: 999px;
+  background: var(--line); overflow: hidden;
+}
+.sess-bar-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width 0.25s ease;
+}
+.sess-hearts {
+  font-size: 0.95rem; letter-spacing: 0.05em; color: var(--bad);
+  min-width: 5.5rem; text-align: right; font-family: var(--sans);
+}
+.sess-body { flex: 1; padding: 0.5rem 0 1rem; }
+.sess-prompt {
+  font-size: 1.15rem; color: var(--parchment); margin: 0 0 1rem; line-height: 1.4;
+}
+.intro-card h1 { font-size: 1.6rem; color: var(--parchment); }
+.intro-html { margin: 1rem 0 1.5rem; }
+
+.choices.big { display: flex; flex-direction: column; gap: 0.55rem; }
+.choice-btn, .tile-btn {
+  font-family: var(--sans); font-size: 1rem;
+  padding: 0.85rem 1rem; border-radius: 12px;
+  border: 2px solid var(--line); background: var(--bg-elev); color: var(--ink);
+  cursor: pointer; text-align: left;
+}
+.choice-btn:hover, .tile-btn:hover { border-color: var(--accent); }
+.choice-btn.selected, .tile-btn.selected {
+  border-color: var(--accent-2);
+  background: #242018;
+  box-shadow: 0 0 0 1px var(--accent-2);
+}
+
+.tile-bank { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+.tile-answer {
+  min-height: 2.5rem; padding: 0.65rem 0.85rem;
+  border: 1px dashed var(--line); border-radius: 10px;
+  font-family: var(--mono); font-size: 1.15rem; color: var(--accent-2);
+}
+
+.match-grid { display: flex; flex-direction: column; gap: 0.65rem; }
+.match-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; align-items: center;
+}
+.match-left {
+  font-family: var(--mono); color: var(--accent-2); font-size: 1.05rem;
+}
+.match-select {
+  padding: 0.5rem; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); font-family: var(--sans);
+}
+
+.sess-feedback {
+  margin: 0.5rem 0; padding: 0.75rem 0.9rem; border-radius: 10px;
+  font-family: var(--sans); font-size: 0.92rem;
+}
+.sess-feedback.ok { background: #1a2a20; border: 1px solid #3d5a45; }
+.sess-feedback.bad { background: #2a1a1a; border: 1px solid #5a3d3d; }
+
+.sess-footer {
+  position: sticky; bottom: 0; padding: 0.75rem 0 1rem;
+  background: linear-gradient(transparent, var(--bg) 30%);
+}
+.sess-footer .btn { width: 100%; padding: 0.85rem; font-size: 1rem; }
+
+.tts-box.compact { margin-bottom: 1rem; }
+.on-quote {
+  font-size: 1.4rem; color: var(--accent-2); font-family: var(--mono);
+  border-left: 3px solid var(--accent-2); padding-left: 1rem; margin: 1rem 0;
+}
+.lore-text, .lore-body { font-size: 1.05rem; }
+
+.celebrate {
+  text-align: center; padding: 2.5rem 1rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: radial-gradient(ellipse at center, #2a3320 0%, var(--panel) 70%);
+}
+.celebrate.failed {
+  background: radial-gradient(ellipse at center, #332020 0%, var(--panel) 70%);
+}
+.celebrate h1 { color: var(--accent-2); }
+.celebrate .hero-actions { justify-content: center; }
+
+@media (max-width: 480px) {
+  .path-node-wrap.left { padding-left: 4%; }
+  .path-node-wrap.right { padding-right: 4%; }
+  .stat-pills { order: 3; width: 100%; }
+}
+
+/* ——— Study notes / Classic Lesson 1 ——— */
+.unit-banner .unit-notes-btn {
+  margin-left: auto;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+}
+.path-node.type-notes .node-icon {
+  border-color: var(--parchment);
+  color: var(--parchment);
+}
+.study-notes-view .lesson-section,
+.classic-lesson-view .lesson-section {
+  margin-top: 1.25rem;
+}
+.label-note { font-size: 0.88rem; margin: 0.25rem 0; }
+.classic-lesson-view .speak-block { margin: 1rem 0; }
+.section-html a { color: var(--accent); }
+
+  </style>
+</head>
+<body>
+  <div id="app">
+    <p style="font-family: system-ui; color: #a89f8e; padding: 2rem;">Loading Norðrœna…</p>
+  </div>
+  <noscript><p style="padding:2rem;color:#c44">JavaScript is required.</p></noscript>
+  <script>
+    window.addEventListener('error', function(e) {
+      var el = document.getElementById('app');
+      if (el && /Loading Nor/.test(el.textContent||'')) {
+        el.innerHTML = '<p style="padding:2rem;font-family:system-ui;color:#c9a227">Load error: ' + (e.message||'unknown') +
+          '. On iPhone, open this standalone file in Safari.</p>';
+      }
+    }, true);
+  </script>
+  <script>
+
+/* ==== data/course.js ==== */
+/**
+ * Norðrœna — Course metadata & charter
+ * Historical Old West Norse / Classical normalized Old Norse
+ */
+window.NORDRONA = window.NORDRONA || {};
+
+window.NORDRONA.course = {
+  title: "Norðrœna",
+  subtitle: "Old Norse Course",
+  tagline: "A progressive path course in historical Old West Norse",
+  version: "0.2.0",
+
+  charter: {
+    targetLanguage: {
+      name: "Old West Norse (Classical / normalized)",
+      period: "c. 1150–1350",
+      description:
+        "The language of the Icelandic Family Sagas, Eddic and skaldic poetry in manuscript tradition, and early Norwegian diplomas — as reconstructed and normalized by modern philology. We teach Classical Old Norse (norrœna) as used in scholarly editions: normalized orthography reflecting a West Norse dialect continuum, not a living vernacular."
+    },
+    notModernIcelandic: {
+      warning: "MODERN ICELANDIC — NOT OLD NORSE",
+      points: [
+        "Modern Icelandic (íslenska) is a living language that descends from Old Norse but has changed in phonology, morphology, lexicon, and orthographic convention.",
+        "We never present Modern Icelandic forms as Old Norse. Occasional comparisons appear only with an explicit label: MODERN ICELANDIC — NOT OLD NORSE.",
+        "Example: ON maðr ‘man’ vs Modern Icelandic maður — related, not identical in form or historical status."
+      ]
+    },
+    oldNorwegian: {
+      title: "Old Norwegian & the West Norse continuum",
+      text:
+        "Old West Norse includes Icelandic and Norwegian manuscript traditions. Classical normalized Old Norse (the ‘saga language’ of textbooks) is largely based on 13th-century Icelandic orthography and morphology, with Norwegian variants noted where pedagogically useful. This course prioritizes the classical normalized system used in Grønbech, Gordon, Zoëga, and Cleasby–Vigfusson conventions."
+    },
+    sources: {
+      title: "Scholarly sources & method",
+      items: [
+        "Normalized Classical Old Norse as in standard grammars and dictionaries (e.g. Gordon, Noreen, Zoëga).",
+        "Manuscript-attested vocabulary preferred; reconstructed or uncertain forms always labelled.",
+        "Phonology presented as a scholarly reconstruction of Classical ON sound values — not Modern Icelandic pronunciation dressed as Old Norse.",
+        "No invented ‘Viking’ vocabulary. Every lemma is attested, normalized from attestation, or explicitly marked reconstructed/uncertain."
+      ]
+    },
+    pronunciationHonesty: {
+      title: "Pronunciation honesty",
+      text:
+        "We cannot hear 13th-century speakers. Values taught here are the conventional academic reconstruction used in philology classrooms. Length, stress, and key consonants (þ, ð, etc.) are taught carefully. Where Modern Icelandic pronunciation differs, we say so and label it clearly."
+    },
+    labels: {
+      title: "Vocabulary labels (required)",
+      items: [
+        { code: "ATTESTED", meaning: "Form directly supported by manuscript evidence in the relevant period." },
+        { code: "NORMALIZED", meaning: "Spelling regularized to classical editorial orthography from attested variants." },
+        { code: "RECONSTRUCTED", meaning: "Form inferred by comparative method; not directly attested in this shape." },
+        { code: "uncertain", meaning: "Meaning, form, or status debated; treat with caution." }
+      ]
+    },
+    parallelTracks: [
+      {
+        id: "futhark",
+        title: "Elder Futhark (parallel track)",
+        note: "Migration-Period / early Proto-Norse runes. Not the script of saga manuscripts. Open via nav."
+      }
+    ],
+    roadmap: [
+      { id: 1, title: "Historical ON & the sound system", status: "available" },
+      { id: 2, title: "Nouns I: strong masculines & articles", status: "placeholder" },
+      { id: 3, title: "Verbs I: vera, heita & present indicative", status: "placeholder" },
+      { id: 4, title: "Nouns II: feminines & neuters", status: "planned" },
+      { id: 5, title: "Case & simple sentences", status: "planned" },
+      { id: 6, title: "Adjectives & agreement", status: "planned" },
+      { id: 7, title: "Past tense & saga reading I", status: "planned" }
+    ]
+  },
+
+  lessons: [
+    { id: 1, slug: "lesson-1", title: "Historical ON & the sound system", file: "lesson1" },
+    { id: 2, slug: "lesson-2", title: "Nouns I: strong masculines & articles", file: "lesson2" },
+    { id: 3, slug: "lesson-3", title: "Verbs I: vera, heita & present indicative", file: "lesson3" }
+  ]
+};
+
+
+/* ==== data/path.js ==== */
+/**
+ * Norðrœna — Duolingo-style learning path (pedagogy only)
+ * Scholarly Classical Old Norse content — not a brand clone.
+ */
+window.NORDRONA = window.NORDRONA || {};
+
+(function (N) {
+  /** Shared vocab bank for exercises */
+  const V = {
+    madr: {
+      form: "maðr",
+      gloss: "man; person; husband (context-dependent)",
+      pos: "m. noun (cons. stem)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED spelling of a thoroughly attested lemma",
+      grammar: "Nom. sg. maðr; gen. manns; dat. manni; acc. mann. Strong masculine. Plural menn (irregular).",
+      clearSpeak: "MAHTH-r (th as in this)",
+      compare: null
+    },
+    kona: {
+      form: "kona",
+      gloss: "woman; wife",
+      pos: "f. noun (ōn-stem)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED classical form",
+      grammar: "Nom. sg. kona; gen. konu; dat. konu; acc. konu. Weak feminine. Pl. konur.",
+      clearSpeak: "KOH-nah",
+      compare: null
+    },
+    land: {
+      form: "land",
+      gloss: "land; country",
+      pos: "n. noun (a-stem)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED; widespread in compounds (e.g. Ísland)",
+      grammar: "Nom./acc. sg. land; gen. lands; dat. landi. Strong neuter. Pl. lǫnd (u-umlaut).",
+      clearSpeak: "LAHND",
+      compare: null
+    },
+    vera: {
+      form: "vera",
+      gloss: "to be",
+      pos: "verb (anomalous)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED infinitive of the highly irregular verb ‘to be’",
+      grammar: "Pres. ind. em, ert, er, erum, eruð, eru. Past var / váru. Essential copula — full paradigm in Lesson 3.",
+      clearSpeak: "VEH-rah",
+      compare: null
+    },
+    heita: {
+      form: "heita",
+      gloss: "to be called; to be named",
+      pos: "verb (strong, VII)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED; formulaic in introductions (X heitir…)",
+      grammar: "Pres. ind. heiti, heitir, heitir, heitum, heitið, heita. Past hét. Used for names: Ek heiti… ‘I am called…’.",
+      clearSpeak: "HAY-tah",
+      compare: {
+        label: "MODERN ICELANDIC — NOT OLD NORSE",
+        text: "Mod. Icel. heita remains cognate and similar in use, but do not assume identical paradigms or pronunciation."
+      }
+    },
+    thorr: {
+      form: "Þórr",
+      gloss: "Thor (theonym)",
+      pos: "m. noun (theonym)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED classical form of a thoroughly attested name",
+      grammar: "Theonym; initial þ, long ó, geminate rr.",
+      clearSpeak: "THOR (th as in thin, long o)",
+      compare: null
+    },
+    odinn: {
+      form: "Óðinn",
+      gloss: "Odin (theonym)",
+      pos: "m. noun (theonym)",
+      label: "ATTESTED",
+      labelNote: "NORMALIZED classical form of a thoroughly attested name",
+      grammar: "Theonym; long Ó, medial ð, geminate nn.",
+      clearSpeak: "OH-thin (th as in this)",
+      compare: null
+    }
+  };
+
+  /** Build full vocab card HTML from V entry or plain object */
+  function vocabCardHtml(v) {
+    const compare = v.compare
+      ? `<aside class="callout warn tight"><strong>${v.compare.label}</strong><p>${v.compare.text}</p></aside>`
+      : "";
+    return `<article class="vocab-card">
+      <header><span class="lemma">${v.form}</span> <span class="label attested">${v.label}</span></header>
+      <p class="gloss">${v.gloss}</p>
+      <p class="pos muted">${v.pos || ""}</p>
+      ${v.labelNote ? `<p class="label-note muted"><em>Label note:</em> ${v.labelNote}</p>` : ""}
+      ${v.grammar ? `<p class="grammar">${v.grammar}</p>` : ""}
+      ${v.clearSpeak ? `<p class="tts-cue muted"><strong>Clear cue:</strong> <code>${v.clearSpeak}</code></p>` : ""}
+      ${compare}
+    </article>`;
+  }
+
+  function mc(id, prompt, choices, answer, extra) {
+    return Object.assign({ id, type: "multiple", prompt, choices, answer }, extra || {});
+  }
+  function text(id, prompt, accept, extra) {
+    return Object.assign({ id, type: "text", prompt, accept, acceptNormalize: true }, extra || {});
+  }
+  function tf(id, prompt, answerTrue, explanation, hint) {
+    return {
+      id, type: "truefalse", prompt,
+      choices: [{ id: "t", text: "True" }, { id: "f", text: "False" }],
+      answer: answerTrue ? "t" : "f",
+      explanation: explanation || "",
+      hint: hint || ""
+    };
+  }
+  function match(id, prompt, pairs, explanation) {
+    return { id, type: "match", prompt, pairs, explanation: explanation || "" };
+  }
+  function tapHear(id, audioForm, clearSpeak, choices, answer, explanation) {
+    return {
+      id, type: "tap_hear", prompt: "Tap what you hear",
+      audioForm, clearSpeak, choices, answer,
+      explanation: explanation || ""
+    };
+  }
+  function tiles(id, promptEn, tilesArr, answer, explanation) {
+    return {
+      id, type: "tiles", prompt: promptEn,
+      tiles: tilesArr, answer, explanation: explanation || ""
+    };
+  }
+  function fill(id, prompt, accept, choices, explanation) {
+    return {
+      id, type: "fill", prompt, accept, choices: choices || null,
+      acceptNormalize: true, explanation: explanation || ""
+    };
+  }
+  function speak(id, target, clearSpeak, gloss, label, notes, cues, tips) {
+    return {
+      id, type: "speak", prompt: "Say: " + target, target, clearSpeak, gloss, label,
+      reconstructedNotes: notes,
+      historicalCues: cues || [],
+      rubricTips: tips || []
+    };
+  }
+  function lore(id, title, html) {
+    return { id, type: "lore", title, html };
+  }
+  function listenSlow(id, form, clearSpeak, gloss, label) {
+    return {
+      id, type: "listen", prompt: "Listen carefully, then choose the gloss",
+      audioForm: form, clearSpeak, gloss, label: label || "ATTESTED",
+      choices: null // filled by session from nearby distractors if needed
+    };
+  }
+
+  N.path = {
+    version: "0.2.0",
+    title: "Norðrœna",
+    subtitle: "Old Norse Path",
+    heartsMax: 5,
+    xpPerLevel: 10,
+    xpPerPerfect: 15,
+
+    sections: [
+      {
+        id: "s1",
+        title: "Foundations",
+        subtitle: "Sounds, first words, and ON vs Modern Icelandic awareness",
+        unlocked: true,
+        units: [
+          {
+            id: "u1",
+            title: "Sound system & letters",
+            subtitle: "þ ð ǫ æ · length · stress",
+            studyNotes: {
+              title: "Unit 1 — Full study notes",
+              lessonId: 1,
+              sectionIds: ["what-is-on", "alphabet", "length-stress", "consonants"]
+            },
+            levels: [
+              {
+                id: "u1-notes",
+                type: "notes",
+                title: "Study notes (full)",
+                icon: "❧",
+                notesOnly: true,
+                route: "#/notes/u1",
+                exercises: []
+              },
+              {
+                id: "u1-l1",
+                type: "learn",
+                title: "Thorn & eth",
+                icon: "þ",
+                intro: {
+                  title: "þ and ð",
+                  html: `<p>Classical normalized Old Norse uses the Latin alphabet plus several letters essential to the sound system. Two dental fricatives:</p>
+                  <div class="letter-grid">
+                    <div class="letter-card"><span class="glyph">þ</span><span class="name">thorn</span><span class="ipa">/θ/</span><span class="note">voiceless dental fricative — as in English <em>thin</em></span></div>
+                    <div class="letter-card"><span class="glyph">ð</span><span class="name">eth</span><span class="ipa">/ð/</span><span class="note">voiced dental fricative — as in English <em>this</em></span></div>
+                  </div>
+                  <aside class="callout info"><strong>Pronunciation honesty</strong><p>These IPA values are the conventional academic reconstruction for Classical ON. Exact quality varied by time and region. We do not claim to reproduce a single speaker’s voice.</p></aside>
+                  <p class="muted">Open <a href="#/notes/u1">Unit 1 study notes</a> for the full alphabet prose (ǫ æ œ, length marking, and more).</p>`
+                },
+                exercises: [
+                  mc("u1l1-1", "Which letter is the <em>voiced</em> dental fricative (as in <em>this</em>)?",
+                    [{ id: "a", text: "þ (thorn)" }, { id: "b", text: "ð (eth)" }, { id: "c", text: "ǫ" }, { id: "d", text: "æ" }],
+                    "b", { hint: "Thorn is voiceless; eth is voiced.", explanation: "ð (eth) = /ð/. þ (thorn) = /θ/." }),
+                  mc("u1l1-2", "Which letter is the <em>voiceless</em> dental fricative (as in <em>thin</em>)?",
+                    [{ id: "a", text: "ð" }, { id: "b", text: "þ" }, { id: "c", text: "d" }, { id: "d", text: "t" }],
+                    "b", { explanation: "þ = /θ/." }),
+                  tapHear("u1l1-3", "þ", "th as in thin",
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }, { id: "c", text: "ǫ" }], "a",
+                    "Clear-mode cue for thorn. Pedagogical approximation — not historical ON speech."),
+                  tapHear("u1l1-4", "ð", "th as in this",
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }, { id: "c", text: "æ" }], "b",
+                    "Clear-mode cue for eth."),
+                  tf("u1l1-5", "þ and ð are the same sound in Classical ON orthography.", false,
+                    "False — þ is voiceless /θ/; ð is voiced /ð/.", "Think thin vs this."),
+                  mc("u1l1-6", "In normalized texts, eth often appears:",
+                    [{ id: "a", text: "Only at the very start of every word" }, { id: "b", text: "Typically medial/final (voiced position)" }, { id: "c", text: "Never in nouns" }, { id: "d", text: "Only in Modern Icelandic" }],
+                    "b", { explanation: "Distribution is orthographic–phonological convention: þ often initial; ð medial/final." }),
+                  fill("u1l1-7", "Type the letter for voiced dental fricative:", ["ð"],
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }, { id: "c", text: "d" }],
+                    "ð (eth)."),
+                  mc("u1l1-8", "These IPA values are:",
+                    [{ id: "a", text: "Exact recordings of saga authors" }, { id: "b", text: "Conventional academic reconstruction" }, { id: "c", text: "Modern Icelandic claimed as ON with no label" }, { id: "d", text: "Invented for games only" }],
+                    "b", { explanation: "Scholarly reconstruction — we cannot hear 13th-c. speakers." })
+                ]
+              },
+              {
+                id: "u1-l2",
+                type: "learn",
+                title: "ǫ æ œ & length",
+                icon: "ǫ",
+                intro: {
+                  title: "More letters & vowel length",
+                  html: `<div class="letter-grid">
+                    <div class="letter-card"><span class="glyph">ǫ</span><span class="name">o caudata</span><span class="ipa">/ɔ/</span><span class="note">open rounded back vowel (often written <em>ö</em> in some editions)</span></div>
+                    <div class="letter-card"><span class="glyph">æ</span><span class="name">ash</span><span class="ipa">/ɛː/ ~ /æː/</span><span class="note">long open front vowel (length marked in careful texts)</span></div>
+                    <div class="letter-card"><span class="glyph">œ</span><span class="name">oe</span><span class="ipa">/øː/</span><span class="note">long front rounded vowel (u-umlaut product)</span></div>
+                  </div>
+                  <p>Vowels may be short or long. In normalized texts, length is often marked with an acute accent: <em>á é í ó ú ý</em> (and sometimes <em>ǽ œ́</em>). Unmarked vowels are short unless context or a dictionary entry indicates otherwise.</p>
+                  <ul class="scholar-list">
+                    <li><strong>Stress</strong> falls on the first syllable of the word (primary stress). Compounds keep stress on the first element’s first syllable.</li>
+                    <li><strong>Length is phonemic</strong>: learn each word’s length from a reliable dictionary or marked text.</li>
+                    <li><strong>Syllable weight</strong> matters for poetry and for later morphology; for now, practice hearing (or imagining) a clear contrast between short and long vowels.</li>
+                    <li>Do not import Modern Icelandic diphthongization rules wholesale and call them Old Norse.</li>
+                  </ul>
+                  <aside class="callout warn"><strong>MODERN ICELANDIC — NOT OLD NORSE</strong>
+                  <p>Modern Icelandic has diphthongized many historically long vowels (e.g. <em>á</em> ≈ [au]). Classical ON <em>á</em> is conventionally taught as a long monophthong /ɑː/. Use the ON values in this course unless a comparison is explicitly labelled.</p></aside>
+                  <p class="muted">See also <a href="#/notes/u1">Unit 1 study notes</a> for the complete alphabet section.</p>`
+                },
+                exercises: [
+                  mc("u1l2-1", "Where does primary stress fall in a native ON word?",
+                    [{ id: "a", text: "Final syllable" }, { id: "b", text: "First syllable" }, { id: "c", text: "Penult (Latin rule)" }, { id: "d", text: "Free/unpredictable" }],
+                    "b", { explanation: "Germanic initial stress." }),
+                  mc("u1l2-2", "ǫ (o caudata) is conventionally:",
+                    [{ id: "a", text: "Open rounded back /ɔ/" }, { id: "b", text: "A silent letter" }, { id: "c", text: "Identical to Modern English ‘ee’" }, { id: "d", text: "Only a rune" }],
+                    "a", { explanation: "/ɔ/ — open rounded back." }),
+                  mc("u1l2-3", "In normalized texts, á usually marks:",
+                    [{ id: "a", text: "A short vowel" }, { id: "b", text: "A long vowel" }, { id: "c", text: "Stress on the last syllable" }, { id: "d", text: "Modern Icelandic only" }],
+                    "b", { explanation: "Acute = length in careful normalized orthography." }),
+                  tf("u1l2-4", "Classical ON á should be taught as the Modern Icelandic diphthong [au] with no warning label.", false,
+                    "False — that would present Modern Icelandic as Old Norse. ON á ≈ /ɑː/ monophthong in this course.",
+                    "Charter: MODERN ICELANDIC — NOT OLD NORSE."),
+                  tapHear("u1l2-5", "ǫ", "aw as in law, short and rounded",
+                    [{ id: "a", text: "ǫ" }, { id: "b", text: "á" }, { id: "c", text: "í" }], "a"),
+                  mc("u1l2-6", "æ (ash) in Classical ON is roughly:",
+                    [{ id: "a", text: "A long open front vowel" }, { id: "b", text: "A click consonant" }, { id: "c", text: "Silent" }, { id: "d", text: "Only Elder Futhark" }],
+                    "a", { explanation: "/ɛː/ ~ /æː/ conventionally." }),
+                  fill("u1l2-7", "Type the o-caudata letter used in pl. lǫnd:", ["ǫ"], null, "ǫ appears in lǫnd (u-umlaut of land)."),
+                  mc("u1l2-8", "Length is:",
+                    [{ id: "a", text: "Never important" }, { id: "b", text: "Phonemic — learn each word’s length" }, { id: "c", text: "Only for poetry, never prose" }, { id: "d", text: "Marked only with runes" }],
+                    "b", { explanation: "Length contrasts matter; learn from marked texts/dictionaries." })
+                ]
+              },
+              {
+                id: "u1-l3",
+                type: "speak",
+                title: "Speak: sounds",
+                icon: "🎤",
+                exercises: [
+                  speak("u1l3-1", "þ", "th as in thin", "voiceless dental fricative /θ/ (as in English thin)", "NORMALIZED",
+                    "Target: clear /θ/ — tongue tip at teeth, continuous fricative, no /t/ or /d/ stop. Word-initial quality as in þing, þú (when you meet them later).",
+                    ["Continuous fricative, not a stop", "Voiceless (no vocal-fold buzz like ð)", "Dental place (thin, not sin)"],
+                    ["Say English thin then isolate the first sound — that approximates ON þ.", "Do not substitute /f/ or /s/.", "This is a reconstructed Classical value, not Modern Icelandic coaching disguised as ON."]),
+                  speak("u1l3-2", "ð", "th as in this", "voiced dental fricative /ð/ (as in English this)", "NORMALIZED",
+                    "Target: voiced /ð/. Contrast with þ. Medial/final eth appears in maðr, Óðinn.",
+                    ["Voiced fricative (vocal fold vibration)", "Same place as þ, different voicing", "Not a hard /d/ stop"],
+                    ["English this → isolate ð.", "In maðr, ð is medial — keep it fricative between vowels/consonants.", "ASR will often mishear ð; ignore English ASR as ground truth."]),
+                  speak("u1l3-3", "ǫ", "aw as in law, short and rounded", "open rounded back vowel /ɔ/ (often written ö in some editions)", "NORMALIZED",
+                    "Say a short open o (as in many transcriptions of British not /ɒ/–/ɔ/, or roughly aw with lips rounded but short). Not Modern Icelandic ö-quality claimed as historical ON without a label.",
+                    ["Back, rounded, open-mid", "Short unless marked long in a given word", "Distinct from ó /oː/ and from a /a/"],
+                    ["Practice the sound in isolation, then recall pl. lǫnd from land.", "Recording + self-rate is the goal; no historical ON TTS is claimed here."]),
+                  speak("u1l3-4", "a — á", "ah, short — then aa, long ah (hold longer, no ow diphthong)", "short /a/ vs long /ɑː/ (conventional Classical values)", "NORMALIZED",
+                    "Hold á roughly twice as long as a. Classical á is taught as a long monophthong /ɑː/ — NOT the Modern Icelandic diphthong [au] unless labelled MODERN ICELANDIC — NOT OLD NORSE.",
+                    ["Same vowel quality family, different duration", "á held longer (≈ two beats vs one)", "No [au] diphthong for Classical ON á in this course"],
+                    ["Tap once for a, twice-length for á.", "If you diphthongize, correct toward a steady long vowel for ON practice."]),
+                  speak("u1l3-5", "Þórr", "THOR (th as in thin, long o)", "Thor (theonym)", "ATTESTED",
+                    "Initial þ /θ/. Long ó /oː/. Double rr — hold/trilled or clearly lengthened r-quality per your dialect training; do not drop it. Stress initial.",
+                    ["þ not /t/ or /f/", "Long ó (duration)", "Final geminate/long r audible"],
+                    ["ÞÓRR — thorn + long o + rr.", "Do not use Modern Icelandic citation as unmarked ON pronunciation coaching."]),
+                  speak("u1l3-6", "Óðinn", "OH-thin (th as in this)", "Odin (theonym)", "ATTESTED",
+                    "Long Ó /oː/. Medial ð /ð/. Double nn. Stress on first syllable. NORMALIZED classical form of a thoroughly attested name.",
+                    ["Long initial Ó", "ð fricative (not /d/)", "Geminate nn — hold the n"],
+                    ["Ó-ðinn — length on Ó; ð not d; nn doubled.", "ASR may output Odin/Othin; that is not a historical grade."]),
+                  mc("u1l3-7", "Self-rating against reconstructed cues is preferred because:",
+                    [{ id: "a", text: "Browser ASR is historical ON ground truth" }, { id: "b", text: "ASR is modern-language and never historical ground truth" }, { id: "c", text: "We have saga-author audio" }, { id: "d", text: "TTS is medieval" }],
+                    "b", { explanation: "Record → playback → self-rate. ASR is a rough modern aid only." }),
+                  tf("u1l3-8", "Clear-mode TTS phonetic cues are historical Old Norse speech.", false,
+                    "False — Clear cues are pedagogical English-friendly approximations, labelled as such.",
+                    "Always compare with reconstructed notes.")
+                ]
+              },
+              {
+                id: "u1-l4",
+                type: "practice",
+                title: "Practice: sounds",
+                icon: "↻",
+                exercises: [
+                  mc("u1l4-1", "Match: voiced dental fricative →",
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }, { id: "c", text: "ǫ" }], "b"),
+                  match("u1l4-2", "Match letter ↔ value",
+                    [{ left: "þ", right: "/θ/ thin" }, { left: "ð", right: "/ð/ this" }, { left: "ǫ", right: "/ɔ/" }],
+                    "Dental fricatives + o caudata."),
+                  tapHear("u1l4-3", "þ", "th as in thin",
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }], "a"),
+                  tapHear("u1l4-4", "ð", "th as in this",
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }], "b"),
+                  text("u1l4-5", "Type eth (voiced):", ["ð"], { explanation: "ð" }),
+                  mc("u1l4-6", "Primary stress:",
+                    [{ id: "a", text: "First syllable" }, { id: "b", text: "Last syllable" }], "a"),
+                  tf("u1l4-7", "Acute accent in normalized ON often marks vowel length.", true,
+                    "True — á é í ó ú ý etc."),
+                  mc("u1l4-8", "œ is conventionally:",
+                    [{ id: "a", text: "Long front rounded /øː/" }, { id: "b", text: "A pause mark" }, { id: "c", text: "Identical to þ" }],
+                    "a")
+                ]
+              },
+              {
+                id: "u1-l5",
+                type: "learn",
+                title: "Key consonants",
+                icon: "r",
+                intro: {
+                  title: "Consonant notes",
+                  html: `<ul class="scholar-list">
+                    <li><strong>þ / ð</strong> — dental fricatives; þ typically word-initial or after voiceless sounds; ð medial/final voiced (distribution is orthographic–phonological convention in normalized texts).</li>
+                    <li><strong>hl-, hn-, hr-</strong> — historically voiceless resonants; often taught as /l n r/ with a preceding /h/-like quality.</li>
+                    <li><strong>x</strong> — usually /ks/ (as in <em>oxi</em>).</li>
+                    <li><strong>g, k</strong> — velar stops; palatal colouring before front vowels is debated in detail — beginners may use clear [g]/[k].</li>
+                    <li><strong>Final -r</strong> in nom. sg. masculines (e.g. <em>maðr</em>) is a real morphological ending, not silent decoration.</li>
+                  </ul>
+                  <aside class="callout info"><strong>Writing systems</strong><p>þ and ð here are <em>Latin-script</em> Classical ON. Elder Futhark ᚦ (thurisaz) is Migration-Period / Proto-Norse epigraphy — not how Heimskringla was written. Rune rows also do not mark vowel length the way normalized <em>á</em> vs <em>a</em> does. Open the <a href="#/futhark">Elder Futhark</a> module for the full chronology and correlations.</p></aside>
+                  <p class="muted">Full prose also in <a href="#/notes/u1">Unit 1 study notes</a>.</p>`
+                },
+                exercises: [
+                  mc("u1l5-1", "Final -r in maðr is:",
+                    [{ id: "a", text: "Silent decoration" }, { id: "b", text: "A real morphological ending" }, { id: "c", text: "Only Modern Icelandic" }, { id: "d", text: "A rune" }],
+                    "b", { explanation: "Audible morphological -r in nom. sg. masculines." }),
+                  tf("u1l5-2", "Elder Futhark is the normal writing system of medieval saga manuscripts.", false,
+                    "False — manuscripts use Latin script. Elder Futhark is earlier epigraphy.",
+                    "See Futhark side path."),
+                  mc("u1l5-3", "Classical ON literary texts in editions use primarily:",
+                    [{ id: "a", text: "Elder Futhark" }, { id: "b", text: "Latin alphabet (+ þ ð ǫ …)" }, { id: "c", text: "Only Younger Futhark" }, { id: "d", text: "Ogham" }],
+                    "b"),
+                  mc("u1l5-4", "x in ON usually represents:",
+                    [{ id: "a", text: "/ks/" }, { id: "b", text: "/ʃ/" }, { id: "c", text: "Silence" }],
+                    "a", { explanation: "As in oxi." }),
+                  match("u1l5-5", "Match",
+                    [{ left: "þ", right: "voiceless /θ/" }, { left: "ð", right: "voiced /ð/" }, { left: "-r (nom.)", right: "morphological ending" }]),
+                  fill("u1l5-6", "Type thorn:", ["þ"], null, "þ"),
+                  mc("u1l5-7", "hl-, hn-, hr- are taught as:",
+                    [{ id: "a", text: "Voiceless resonants (h-like + liquid/nasal)" }, { id: "b", text: "Silent digraphs" }, { id: "c", text: "Modern emoji" }],
+                    "a"),
+                  tf("u1l5-8", "You should import Modern Icelandic diphthong rules wholesale and call them Old Norse.", false,
+                    "False — label MI comparisons explicitly.")
+                ]
+              }
+            ]
+          },
+          {
+            id: "u2",
+            title: "First vocabulary",
+            subtitle: "maðr · kona · land · vera · heita",
+            studyNotes: {
+              title: "Unit 2 — Full vocabulary notes",
+              lessonId: 1,
+              sectionIds: ["vocab"]
+            },
+            levels: [
+              {
+                id: "u2-notes",
+                type: "notes",
+                title: "Study notes (full)",
+                icon: "❧",
+                notesOnly: true,
+                route: "#/notes/u2",
+                exercises: []
+              },
+              {
+                id: "u2-l1",
+                type: "learn",
+                title: "maðr, kona, land",
+                icon: "ᛗ",
+                intro: {
+                  title: "Three nouns",
+                  html: `<p>Five high-frequency items appear across Unit 2. Labels mark scholarly status. Grammar notes prepare Lessons 2–3.</p>
+                  <div class="vocab-grid">
+                    ${vocabCardHtml(V.madr)}
+                    ${vocabCardHtml(V.kona)}
+                    ${vocabCardHtml(V.land)}
+                  </div>`
+                },
+                exercises: [
+                  match("u2l1-1", "Match ON ↔ English",
+                    [{ left: "maðr", right: "man; person" }, { left: "kona", right: "woman; wife" }, { left: "land", right: "land; country" }],
+                    "All ATTESTED / NORMALIZED."),
+                  text("u2l1-2", "Write ON ‘man; person’ (nom. sg.):", ["maðr"],
+                    { explanation: "maðr — not Mod. Icel. maður as the ON citation form." }),
+                  text("u2l1-3", "Write ON ‘woman; wife’:", ["kona"], { explanation: "kona — ATTESTED." }),
+                  mc("u2l1-4", "land is which gender?",
+                    [{ id: "a", text: "Masculine" }, { id: "b", text: "Feminine" }, { id: "c", text: "Neuter" }],
+                    "c", { explanation: "Strong neuter; pl. lǫnd." }),
+                  tiles("u2l1-5", "Build: ‘land; country’ in ON",
+                    ["land", "maðr", "kona", "vera"], "land", "land (n.)"),
+                  mc("u2l1-6", "maðr is best labelled:",
+                    [{ id: "a", text: "RECONSTRUCTED only" }, { id: "b", text: "ATTESTED (NORMALIZED)" }, { id: "c", text: "Invented Viking festival word" }, { id: "d", text: "Modern Icelandic presented as ON" }],
+                    "b"),
+                  fill("u2l1-7", "Plural of land (u-umlaut) is l_nd — type the vowel letter:", ["ǫ"], null,
+                    "lǫnd — ǫ from u-umlaut."),
+                  mc("u2l1-8", "Mod. Icel. maður vs ON maðr:",
+                    [{ id: "a", text: "Identical in every way; ignore labels" }, { id: "b", text: "Related descendant — compare only with MI warning" }, { id: "c", text: "Unrelated" }],
+                    "b", { explanation: "Cognate descendant ≠ interchangeable unmarked ON." })
+                ]
+              },
+              {
+                id: "u2-l2",
+                type: "learn",
+                title: "vera & heita",
+                icon: "v",
+                intro: {
+                  title: "Two essential verbs",
+                  html: `<div class="vocab-grid">
+                    ${vocabCardHtml(V.vera)}
+                    ${vocabCardHtml(V.heita)}
+                  </div>`
+                },
+                exercises: [
+                  text("u2l2-1", "Infinitive ‘to be’ in Classical ON:", ["vera"]),
+                  text("u2l2-2", "Infinitive ‘to be called/named’:", ["heita"]),
+                  match("u2l2-3", "Match",
+                    [{ left: "vera", right: "to be" }, { left: "heita", right: "to be called" }, { left: "maðr", right: "man; person" }]),
+                  tiles("u2l2-4", "Build ON for ‘to be’",
+                    ["vera", "heita", "land", "kona"], "vera"),
+                  mc("u2l2-5", "Ek heiti… means roughly:",
+                    [{ id: "a", text: "I am called…" }, { id: "b", text: "I own land…" }, { id: "c", text: "I am silent…" }],
+                    "a"),
+                  mc("u2l2-6", "heita is:",
+                    [{ id: "a", text: "ATTESTED / NORMALIZED strong VII" }, { id: "b", text: "A fake Viking word" }, { id: "c", text: "Only Elder Futhark" }],
+                    "a"),
+                  tf("u2l2-7", "You may treat Mod. Icel. heita paradigms as unmarked Classical ON.", false,
+                    "False — cognate, but label MI differences."),
+                  fill("u2l2-8", "Type vera:", ["vera"], null)
+                ]
+              },
+              {
+                id: "u2-l3",
+                type: "listen",
+                title: "Listen: first words",
+                icon: "🎧",
+                exercises: [
+                  tapHear("u2l3-1", "maðr", "MAHTH-r (th as in this)",
+                    [{ id: "a", text: "maðr" }, { id: "b", text: "kona" }, { id: "c", text: "land" }], "a"),
+                  tapHear("u2l3-2", "kona", "KOH-nah",
+                    [{ id: "a", text: "vera" }, { id: "b", text: "kona" }, { id: "c", text: "heita" }], "b"),
+                  tapHear("u2l3-3", "land", "LAHND",
+                    [{ id: "a", text: "land" }, { id: "b", text: "maðr" }, { id: "c", text: "ǫ" }], "a"),
+                  tapHear("u2l3-4", "vera", "VEH-rah",
+                    [{ id: "a", text: "heita" }, { id: "b", text: "vera" }, { id: "c", text: "kona" }], "b"),
+                  tapHear("u2l3-5", "heita", "HAY-tah",
+                    [{ id: "a", text: "heita" }, { id: "b", text: "land" }, { id: "c", text: "þ" }], "a"),
+                  {
+                    id: "u2l3-6", type: "listen_choice", prompt: "Listen, then pick the English gloss",
+                    audioForm: "maðr", clearSpeak: "MAHTH-r (th as in this)",
+                    choices: [{ id: "a", text: "man; person" }, { id: "b", text: "woman; wife" }, { id: "c", text: "to be" }],
+                    answer: "a", explanation: "maðr — ATTESTED."
+                  },
+                  {
+                    id: "u2l3-7", type: "listen_choice", prompt: "Listen, then pick the gloss",
+                    audioForm: "heita", clearSpeak: "HAY-tah",
+                    choices: [{ id: "a", text: "to be" }, { id: "b", text: "to be called" }, { id: "c", text: "land" }],
+                    answer: "b"
+                  },
+                  mc("u2l3-8", "Clear-mode listen audio is:",
+                    [{ id: "a", text: "Historical ON speech" }, { id: "b", text: "Pedagogical modern approximation (phonetic cue)" }, { id: "c", text: "Saga manuscript audio" }],
+                    "b", { explanation: "Always labelled MODERN APPROXIMATION." })
+                ]
+              },
+              {
+                id: "u2-l4",
+                type: "practice",
+                title: "Translate & match",
+                icon: "⇄",
+                exercises: [
+                  match("u2l4-1", "Match all five",
+                    [
+                      { left: "maðr", right: "man; person" },
+                      { left: "kona", right: "woman; wife" },
+                      { left: "land", right: "land; country" },
+                      { left: "vera", right: "to be" },
+                      { left: "heita", right: "to be called" }
+                    ]),
+                  {
+                    id: "u2l4-2", type: "translate_on_en", prompt: "Translate to English: <em>kona</em>",
+                    choices: [{ id: "a", text: "woman; wife" }, { id: "b", text: "man; person" }, { id: "c", text: "to be" }],
+                    answer: "a"
+                  },
+                  {
+                    id: "u2l4-3", type: "translate_on_en", prompt: "Translate: <em>vera</em>",
+                    choices: [{ id: "a", text: "land" }, { id: "b", text: "to be" }, { id: "c", text: "Thor" }],
+                    answer: "b"
+                  },
+                  tiles("u2l4-4", "English → ON: ‘to be called’",
+                    ["heita", "vera", "maðr", "land"], "heita"),
+                  tiles("u2l4-5", "English → ON: ‘man; person’",
+                    ["kona", "maðr", "land", "ǫ"], "maðr"),
+                  text("u2l4-6", "Type ON for ‘land; country’:", ["land"]),
+                  mc("u2l4-7", "Which is neuter?",
+                    [{ id: "a", text: "maðr" }, { id: "b", text: "kona" }, { id: "c", text: "land" }], "c"),
+                  fill("u2l4-8", "Fill: Ek ____ … (‘I am called’)", ["heiti"],
+                    [{ id: "a", text: "heiti" }, { id: "b", text: "land" }, { id: "c", text: "maðr" }],
+                    "Ek heiti… — present of heita.")
+                ]
+              },
+              {
+                id: "u2-l5",
+                type: "speak",
+                title: "Speak: vocabulary",
+                icon: "🎤",
+                exercises: [
+                  speak("u2l5-1", "maðr", "MAHTH-r (th as in this)", "man; person; husband (context-dependent)", "ATTESTED",
+                    "Stress on first (only) syllable. Short a. Medial ð as /ð/. Final -r pronounced as a morphological ending (not silent).",
+                    ["Initial stress", "ð fricative, not /d/", "Audible final -r"],
+                    ["MAÐ-r — avoid Modern Icelandic maður as if it were the ON citation form.", "Self-check: length short on a; ð voiced; -r present."]),
+                  speak("u2l5-2", "kona", "KOH-nah", "woman; wife", "ATTESTED",
+                    "Two syllables; stress on ko-. Short vowels. Clear n.",
+                    ["Stress on first syllable", "Two clear syllables: KO-na", "No reduction of the final a to schwa as a required ON rule"],
+                    ["Keep both vowels; do not swallow -a.", "ATTESTED / NORMALIZED weak feminine."]),
+                  speak("u2l5-3", "land", "LAHND", "land; country", "ATTESTED",
+                    "Short a; final nd cluster clear.",
+                    ["Initial stress", "Clear nd", "Neuter a-stem"],
+                    ["Recall pl. lǫnd later."]),
+                  speak("u2l5-4", "vera", "VEH-rah", "to be", "ATTESTED",
+                    "Two syllables VE-ra.",
+                    ["First-syllable stress", "Both vowels audible"],
+                    ["Anomalous verb — paradigm later."]),
+                  speak("u2l5-5", "heita", "HAY-tah", "to be called", "ATTESTED",
+                    "HEI-ta; diphthongal ei quality approximate.",
+                    ["Stress first syllable", "Two syllables"],
+                    ["Label MI comparisons."]),
+                  tapHear("u2l5-6", "maðr", "MAHTH-r (th as in this)",
+                    [{ id: "a", text: "maðr" }, { id: "b", text: "kona" }], "a"),
+                  mc("u2l5-7", "Final -r in maðr when speaking:",
+                    [{ id: "a", text: "Drop it always" }, { id: "b", text: "Pronounce as morphological ending" }],
+                    "b"),
+                  tf("u2l5-8", "Browser ASR grades historical ON accurately.", false,
+                    "False — modern ASR is never historical ground truth.")
+                ]
+              },
+              {
+                id: "u2-l6",
+                type: "practice",
+                title: "Practice: recycle sounds + words",
+                icon: "↻",
+                exercises: [
+                  mc("u2l6-1", "ð is:",
+                    [{ id: "a", text: "voiced /ð/" }, { id: "b", text: "voiceless /θ/" }], "a"),
+                  text("u2l6-2", "Type maðr:", ["maðr"]),
+                  match("u2l6-3", "Quick match",
+                    [{ left: "þ", right: "/θ/" }, { left: "kona", right: "woman" }, { left: "vera", right: "to be" }]),
+                  tapHear("u2l6-4", "heita", "HAY-tah",
+                    [{ id: "a", text: "heita" }, { id: "b", text: "land" }], "a"),
+                  tiles("u2l6-5", "‘woman; wife’ →",
+                    ["kona", "maðr", "land"], "kona"),
+                  tf("u2l6-6", "Stress is on the first syllable.", true, "True for native ON vocabulary."),
+                  {
+                    id: "u2l6-7", type: "translate_on_en", prompt: "Translate: <em>land</em>",
+                    choices: [{ id: "a", text: "land; country" }, { id: "b", text: "to be called" }],
+                    answer: "a"
+                  },
+                  mc("u2l6-8", "lǫnd is:",
+                    [{ id: "a", text: "Plural of land (u-umlaut)" }, { id: "b", text: "A Modern Icelandic SMS" }, { id: "c", text: "Elder Futhark only" }],
+                    "a")
+                ]
+              }
+            ]
+          },
+          {
+            id: "u3",
+            title: "Readings & awareness",
+            subtitle: "Mini texts · ON vs MI · Checkpoint",
+            studyNotes: {
+              title: "Unit 3 — Practice tips & charter awareness",
+              lessonId: 1,
+              sectionIds: ["practice-tips", "what-is-on"]
+            },
+            levels: [
+              {
+                id: "u3-notes",
+                type: "notes",
+                title: "Study notes (full)",
+                icon: "❧",
+                notesOnly: true,
+                route: "#/notes/u3",
+                exercises: []
+              },
+              {
+                id: "u3-l1",
+                type: "lore",
+                title: "Lore: mini reading",
+                icon: "📜",
+                intro: {
+                  title: "A first formula",
+                  html: `<p class="lore-text">In saga style you will often meet naming formulas with <strong>heita</strong>:</p>
+                  <blockquote class="on-quote">Ek heiti…</blockquote>
+                  <p class="muted">‘I am called…’ — ATTESTED pattern with NORMALIZED classical forms.</p>
+                  <p>Another high-frequency noun pair: <em>maðr</em> and <em>kona</em>. Neuter <em>land</em> builds compounds (e.g. Ísland — later geography; treat compound carefully by period).</p>
+                  <aside class="callout info"><strong>Philology note</strong><p>We teach Classical normalized ON as in scholarly editions — not tourist “Viking” coinages.</p></aside>`
+                },
+                exercises: [
+                  lore("u3l1-0", "Read", `<p>Skim again: <em>Ek heiti…</em> uses <strong>heita</strong>. Copula ‘to be’ is <strong>vera</strong>.</p>`),
+                  mc("u3l1-1", "Ek heiti… uses which verb?",
+                    [{ id: "a", text: "vera" }, { id: "b", text: "heita" }, { id: "c", text: "land" }], "b"),
+                  {
+                    id: "u3l1-2", type: "translate_on_en", prompt: "Sense of <em>Ek heiti…</em>",
+                    choices: [{ id: "a", text: "I am called…" }, { id: "b", text: "I own the land…" }, { id: "c", text: "Silence…" }],
+                    answer: "a"
+                  },
+                  text("u3l1-3", "Type the infinitive ‘to be’:", ["vera"]),
+                  match("u3l1-4", "Match from the reading",
+                    [{ left: "heita", right: "be called" }, { left: "maðr", right: "man" }, { left: "kona", right: "woman" }]),
+                  mc("u3l1-5", "This course’s target is:",
+                    [{ id: "a", text: "Modern Icelandic as unmarked ON" }, { id: "b", text: "Classical normalized Old West Norse" }, { id: "c", text: "Invented festival slang" }],
+                    "b"),
+                  tf("u3l1-6", "Every lemma in this path is attested, normalized from attestation, or explicitly labelled reconstructed/uncertain.", true,
+                    "True — scholarly honesty labels."),
+                  fill("u3l1-7", "Type heita:", ["heita"], null)
+                ]
+              },
+              {
+                id: "u3-l2",
+                type: "learn",
+                title: "ON vs Modern Icelandic",
+                icon: "⚠",
+                intro: {
+                  title: "Do not confuse the stages",
+                  html: `<aside class="callout warn"><strong>MODERN ICELANDIC — NOT OLD NORSE</strong>
+                  <ul>
+                    <li>ON <em>maðr</em> ~ Mod. Icel. <em>maður</em> — related, not identical citation forms.</li>
+                    <li>Mod. Icel. <em>á</em> ≈ [au]; Classical ON <em>á</em> taught as /ɑː/.</li>
+                    <li>Comparisons appear only with an explicit MI warning label.</li>
+                  </ul></aside>
+                  <p>Modern Icelandic is a living descendant. This path teaches historical Classical ON.</p>`
+                },
+                exercises: [
+                  tf("u3l2-1", "Modern Icelandic is the same language stage as Classical ON and needs no labels.", false,
+                    "False — descendant with changes; always label MI."),
+                  mc("u3l2-2", "ON maðr vs Mod. Icel. maður:",
+                    [{ id: "a", text: "Present maður as unmarked ON" }, { id: "b", text: "Related forms — compare with MI warning" }, { id: "c", text: "Unrelated random strings" }],
+                    "b"),
+                  tf("u3l2-3", "Teaching Mod. Icel. á [au] as Classical ON without a warning violates this course’s charter.", true,
+                    "True — charter forbids presenting MI as ON unmarked."),
+                  mc("u3l2-4", "Best label for kona in this course:",
+                    [{ id: "a", text: "ATTESTED / NORMALIZED" }, { id: "b", text: "Invented" }, { id: "c", text: "Only runic" }],
+                    "a"),
+                  {
+                    id: "u3l2-5", type: "truefalse", prompt: "Browser Icelandic TTS/ASR equals medieval ON speech.",
+                    choices: [{ id: "t", text: "True" }, { id: "f", text: "False" }],
+                    answer: "f",
+                    explanation: "False — modern approximation only."
+                  },
+                  match("u3l2-6", "Label awareness",
+                    [{ left: "ATTESTED", right: "manuscript-supported" }, { left: "NORMALIZED", right: "editorial classical spelling" }, { left: "RECONSTRUCTED", right: "comparative inference" }]),
+                  mc("u3l2-7", "When is MI comparison allowed?",
+                    [{ id: "a", text: "Anytime silently" }, { id: "b", text: "Only with explicit MI warning label" }, { id: "c", text: "Never under any circumstances" }],
+                    "b"),
+                  text("u3l2-8", "Type the ON form for ‘man; person’ (not maður):", ["maðr"])
+                ]
+              },
+              {
+                id: "u3-l3",
+                type: "practice",
+                title: "Practice: Units 1–2",
+                icon: "↻",
+                exercises: [
+                  mc("u3l3-1", "þ =",
+                    [{ id: "a", text: "/θ/" }, { id: "b", text: "/ð/" }], "a"),
+                  text("u3l3-2", "Type kona:", ["kona"]),
+                  tapHear("u3l3-3", "land", "LAHND",
+                    [{ id: "a", text: "land" }, { id: "b", text: "vera" }], "a"),
+                  tiles("u3l3-4", "‘to be’ →",
+                    ["vera", "heita", "maðr"], "vera"),
+                  match("u3l3-5", "Recycle",
+                    [{ left: "ð", right: "/ð/" }, { left: "heita", right: "be called" }, { left: "land", right: "land" }]),
+                  mc("u3l3-6", "Stress:",
+                    [{ id: "a", text: "First syllable" }, { id: "b", text: "Last" }], "a"),
+                  {
+                    id: "u3l3-7", type: "translate_on_en", prompt: "Translate: <em>heita</em>",
+                    choices: [{ id: "a", text: "to be called" }, { id: "b", text: "woman" }],
+                    answer: "a"
+                  },
+                  fill("u3l3-8", "Type eth:", ["ð"], null)
+                ]
+              },
+              {
+                id: "u3-l4",
+                type: "learn",
+                title: "True/False philology",
+                icon: "?",
+                exercises: [
+                  tf("u3l4-1", "Elder Futhark is how Heimskringla was normally written.", false,
+                    "False — Latin manuscript orthography."),
+                  tf("u3l4-2", "Normalized Classical ON is a scholarly editorial system for teaching/reading.", true,
+                    "True — editions regularize orthography from attestation."),
+                  tf("u3l4-3", "Invented ‘Viking’ tourist words are fine unmarked as ON.", false,
+                    "False — every lemma needs scholarly status."),
+                  tf("u3l4-4", "Length contrasts can matter for meaning and morphology.", true,
+                    "True — length is phonemic."),
+                  tf("u3l4-5", "Clear-mode TTS is historical ON audio.", false,
+                    "False — pedagogical approximation."),
+                  tf("u3l4-6", "maðr is ATTESTED in the manuscript tradition (NORMALIZED citation).", true,
+                    "True."),
+                  tf("u3l4-7", "Younger Futhark’s 16 runes preserve more vowel detail than Latin normalized ON.", false,
+                    "False — compression makes Viking-Age runic spelling often ambiguous."),
+                  mc("u3l4-8", "RECONSTRUCTED means:",
+                    [{ id: "a", text: "Guessed for a game with no method" }, { id: "b", text: "Inferred by comparative method; labelled" }, { id: "c", text: "Identical to ATTESTED" }],
+                    "b")
+                ]
+              },
+              {
+                id: "u3-l5",
+                type: "checkpoint",
+                title: "Unit checkpoint",
+                icon: "★",
+                intro: {
+                  title: "Foundations checkpoint",
+                  html: `<p>Show that sounds, first vocabulary, and ON≠MI awareness stick. Hearts still apply. Pass to finish Section 1 Unit 3.</p>`
+                },
+                exercises: [
+                  mc("u3l5-1", "Voiced dental fricative letter:",
+                    [{ id: "a", text: "þ" }, { id: "b", text: "ð" }, { id: "c", text: "ǫ" }], "b"),
+                  text("u3l5-2", "ON ‘man; person’:", ["maðr"]),
+                  text("u3l5-3", "ON ‘to be’:", ["vera"]),
+                  text("u3l5-4", "ON ‘to be called’:", ["heita"]),
+                  match("u3l5-5", "Match",
+                    [{ left: "kona", right: "woman; wife" }, { left: "land", right: "land; country" }, { left: "þ", right: "/θ/" }]),
+                  tf("u3l5-6", "Mod. Icel. pronunciation may be taught as Classical ON with no label.", false,
+                    "False."),
+                  tiles("u3l5-7", "‘woman; wife’",
+                    ["kona", "maðr", "vera", "heita"], "kona"),
+                  mc("u3l5-8", "Primary stress:",
+                    [{ id: "a", text: "First syllable" }, { id: "b", text: "Final syllable" }], "a"),
+                  tapHear("u3l5-9", "maðr", "MAHTH-r (th as in this)",
+                    [{ id: "a", text: "maðr" }, { id: "b", text: "kona" }], "a"),
+                  mc("u3l5-10", "This course teaches:",
+                    [{ id: "a", text: "Classical normalized Old West Norse" }, { id: "b", text: "Unlabelled Modern Icelandic" }, { id: "c", text: "Only Elder Futhark as saga script" }],
+                    "a")
+                ]
+              },
+              {
+                id: "s1-classic-l1",
+                type: "notes",
+                title: "Classic Lesson 1 (full)",
+                icon: "📜",
+                notesOnly: true,
+                route: "#/lesson/1",
+                exercises: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "s2",
+        title: "Beginner grammar",
+        subtitle: "Coming soon — cases, nouns, verbs",
+        unlocked: false,
+        comingSoon: true,
+        units: [
+          {
+            id: "u4",
+            title: "Nouns I: strong masculines",
+            subtitle: "Coming soon",
+            comingSoon: true,
+            levels: [
+              { id: "u4-l1", type: "learn", title: "Strong masculines", icon: "🔒", lockedShell: true, exercises: [] },
+              { id: "u4-l2", type: "practice", title: "Articles", icon: "🔒", lockedShell: true, exercises: [] },
+              { id: "u4-l3", type: "checkpoint", title: "Nouns I check", icon: "🔒", lockedShell: true, exercises: [] }
+            ]
+          },
+          {
+            id: "u5",
+            title: "Verbs I: vera & heita paradigms",
+            subtitle: "Coming soon",
+            comingSoon: true,
+            levels: [
+              { id: "u5-l1", type: "learn", title: "vera present", icon: "🔒", lockedShell: true, exercises: [] },
+              { id: "u5-l2", type: "learn", title: "heita present", icon: "🔒", lockedShell: true, exercises: [] },
+              { id: "u5-l3", type: "checkpoint", title: "Verbs I check", icon: "🔒", lockedShell: true, exercises: [] }
+            ]
+          },
+          {
+            id: "u6",
+            title: "Nouns II: feminines & neuters",
+            subtitle: "Coming soon",
+            comingSoon: true,
+            levels: [
+              { id: "u6-l1", type: "learn", title: "Feminines", icon: "🔒", lockedShell: true, exercises: [] },
+              { id: "u6-l2", type: "learn", title: "Neuters", icon: "🔒", lockedShell: true, exercises: [] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "s3",
+        title: "Building sentences",
+        subtitle: "Coming soon — case & agreement",
+        unlocked: false,
+        comingSoon: true,
+        units: [
+          {
+            id: "u7",
+            title: "Case & simple sentences",
+            subtitle: "Coming soon",
+            comingSoon: true,
+            levels: [
+              { id: "u7-l1", type: "learn", title: "Case roles", icon: "🔒", lockedShell: true, exercises: [] },
+              { id: "u7-l2", type: "checkpoint", title: "Case check", icon: "🔒", lockedShell: true, exercises: [] }
+            ]
+          },
+          {
+            id: "u8",
+            title: "Adjectives & agreement",
+            subtitle: "Coming soon",
+            comingSoon: true,
+            levels: [
+              { id: "u8-l1", type: "learn", title: "Agreement", icon: "🔒", lockedShell: true, exercises: [] }
+            ]
+          }
+        ]
+      }
+    ],
+
+    sidePaths: [
+      {
+        id: "futhark",
+        title: "Elder Futhark",
+        subtitle: "Parallel track — not saga orthography",
+        route: "#/futhark",
+        note: "Migration-Period / Proto-Norse runes. Separate from Latin Classical ON path."
+      },
+      {
+        id: "classic-l1",
+        title: "Classic Lesson 1 (full)",
+        subtitle: "All scholarly prose, vocab, exercises & speak drills",
+        route: "#/lesson/1",
+        note: "Verbatim lesson1.js view — path micro-lessons unchanged."
+      }
+    ],
+
+    /** Flatten helpers */
+    vocab: V
+  };
+
+  /** Ordered list of playable level ids in Section 1 */
+  N.path.getAllLevels = function () {
+    const out = [];
+    (N.path.sections || []).forEach((sec) => {
+      (sec.units || []).forEach((unit) => {
+        (unit.levels || []).forEach((lv) => {
+          out.push({ section: sec, unit, level: lv });
+        });
+      });
+    });
+    return out;
+  };
+
+  N.path.findLevel = function (levelId) {
+    const all = N.path.getAllLevels();
+    return all.find((x) => x.level.id === levelId) || null;
+  };
+
+  N.path.getLinearPlayable = function () {
+    return N.path.getAllLevels().filter(
+      (x) =>
+        x.section.unlocked &&
+        !x.section.comingSoon &&
+        !x.level.lockedShell &&
+        !x.level.notesOnly &&
+        x.level.type !== "notes" &&
+        (x.level.exercises || []).length
+    );
+  };
+
+  N.path.counts = function () {
+    const sections = N.path.sections.length;
+    let units = 0, levels = 0, playable = 0;
+    N.path.sections.forEach((s) => {
+      units += (s.units || []).length;
+      (s.units || []).forEach((u) => {
+        levels += (u.levels || []).length;
+        (u.levels || []).forEach((lv) => {
+          if (!lv.lockedShell && (lv.exercises || []).length) playable++;
+        });
+      });
+    });
+    return { sections, units, levels, playable };
+  };
+})(window.NORDRONA);
+
+
+/* ==== data/lesson1.js ==== */
+/**
+ * Lesson 1 — Historical Old Norse & the sound system
+ * Classical normalized Old West Norse
+ */
+window.NORDRONA = window.NORDRONA || {};
+window.NORDRONA.lessons = window.NORDRONA.lessons || {};
+
+window.NORDRONA.lessons[1] = {
+  id: 1,
+  slug: "lesson-1",
+  title: "Historical ON & the sound system",
+  subtitle: "Letters, length, stress, and first vocabulary",
+  locked: false,
+  placeholder: false,
+
+  sections: [
+    {
+      id: "what-is-on",
+      title: "What we mean by Old Norse",
+      html: `
+        <p><strong>Old Norse</strong> (ON; Old West Norse <em>norrœna</em>) here means the <em>Classical normalized</em> language of the West Norse tradition — roughly the language of the Icelandic sagas and related texts as edited by modern philologists (c. 12th–14th centuries in manuscript form, reflecting an earlier spoken continuum).</p>
+        <p>It is <strong>not</strong> Modern Icelandic, not a Hollywood “Viking tongue,” and not a free reconstruction of Proto-Norse. We teach forms that are <span class="label attested">ATTESTED</span> or carefully <span class="label normalized">NORMALIZED</span> from attestation.</p>
+        <aside class="callout warn">
+          <strong>MODERN ICELANDIC — NOT OLD NORSE</strong>
+          <p>Modern Icelandic is a descendant of Old Norse. Cognates look similar (e.g. ON <em>maðr</em> ~ Mod. Icel. <em>maður</em>), but phonology, morphology, and everyday lexicon have changed. Comparison appears only with this label.</p>
+        </aside>
+      `
+    },
+    {
+      id: "alphabet",
+      title: "The classical alphabet & special letters",
+      html: `
+        <p>Classical normalized Old Norse uses the Latin alphabet plus several letters essential to the sound system:</p>
+        <div class="letter-grid">
+          <div class="letter-card"><span class="glyph">þ</span><span class="name">thorn</span><span class="ipa">/θ/</span><span class="note">voiceless dental fricative — as in English <em>thin</em></span></div>
+          <div class="letter-card"><span class="glyph">ð</span><span class="name">eth</span><span class="ipa">/ð/</span><span class="note">voiced dental fricative — as in English <em>this</em></span></div>
+          <div class="letter-card"><span class="glyph">ǫ</span><span class="name">o caudata</span><span class="ipa">/ɔ/</span><span class="note">open rounded back vowel (often written <em>ö</em> in some editions)</span></div>
+          <div class="letter-card"><span class="glyph">æ</span><span class="name">ash</span><span class="ipa">/ɛː/ ~ /æː/</span><span class="note">long open front vowel (length marked in careful texts)</span></div>
+          <div class="letter-card"><span class="glyph">œ</span><span class="name">oe</span><span class="ipa">/øː/</span><span class="note">long front rounded vowel (u-umlaut product)</span></div>
+        </div>
+        <p>Vowels may be short or long. In normalized texts, length is often marked with an acute accent: <em>á é í ó ú ý</em> (and sometimes <em>ǽ œ́</em>). Unmarked vowels are short unless context or a dictionary entry indicates otherwise.</p>
+        <aside class="callout info">
+          <strong>Pronunciation honesty</strong>
+          <p>These IPA values are the conventional academic reconstruction for Classical ON. Exact quality varied by time and region. We do not claim to reproduce a single speaker’s voice.</p>
+        </aside>
+      `
+    },
+    {
+      id: "length-stress",
+      title: "Vowel length & stress",
+      html: `
+        <ul class="scholar-list">
+          <li><strong>Stress</strong> falls on the first syllable of the word (primary stress). Compounds keep stress on the first element’s first syllable.</li>
+          <li><strong>Length is phonemic</strong>: <em>man</em> vs potential long counterparts — learn each word’s length from a reliable dictionary or marked text.</li>
+          <li><strong>Syllable weight</strong> matters for poetry and for later morphology; for now, practice hearing (or imagining) a clear contrast between short and long vowels.</li>
+          <li>Do not import Modern Icelandic diphthongization rules wholesale and call them Old Norse.</li>
+        </ul>
+        <aside class="callout warn">
+          <strong>MODERN ICELANDIC — NOT OLD NORSE</strong>
+          <p>Modern Icelandic has diphthongized many historically long vowels (e.g. <em>á</em> ≈ [au]). Classical ON <em>á</em> is conventionally taught as a long monophthong /ɑː/. Use the ON values in this course unless a comparison is explicitly labelled.</p>
+        </aside>
+      `
+    },
+    {
+      id: "consonants",
+      title: "Key consonants",
+      html: `
+        <ul class="scholar-list">
+          <li><strong>þ / ð</strong> — dental fricatives; þ typically word-initial or after voiceless sounds; ð medial/final voiced (distribution is orthographic–phonological convention in normalized texts).</li>
+          <li><strong>hl-, hn-, hr-</strong> — historically voiceless resonants; often taught as /l n r/ with a preceding /h/-like quality.</li>
+          <li><strong>x</strong> — usually /ks/ (as in <em>oxi</em>).</li>
+          <li><strong>g, k</strong> — velar stops; palatal colouring before front vowels is debated in detail — beginners may use clear [g]/[k].</li>
+          <li><strong>Final -r</strong> in nom. sg. masculines (e.g. <em>maðr</em>) is a real morphological ending, not silent decoration.</li>
+        </ul>
+        <aside class="callout info">
+          <strong>Writing systems</strong>
+          <p>þ and ð here are <em>Latin-script</em> Classical ON. Elder Futhark ᚦ (thurisaz) is Migration-Period / Proto-Norse epigraphy — not how Heimskringla was written. Rune rows also do not mark vowel length the way normalized <em>á</em> vs <em>a</em> does. Open the <a href="#/futhark">Elder Futhark</a> module for the full chronology and correlations.</p>
+        </aside>
+      `
+    },
+    {
+      id: "vocab",
+      title: "Core vocabulary (Lesson 1)",
+      html: `
+        <p>Five high-frequency items. Labels mark scholarly status. Grammar notes prepare Lessons 2–3.</p>
+      `,
+      vocab: [
+        {
+          form: "maðr",
+          gloss: "man; person; husband (context-dependent)",
+          pos: "m. noun (cons. stem)",
+          label: "ATTESTED",
+          labelNote: "NORMALIZED spelling of a thoroughly attested lemma",
+          grammar: "Nom. sg. maðr; gen. manns; dat. manni; acc. mann. Strong masculine. Plural menn (irregular).",
+          clearSpeak: "MAHTH-r (th as in this)",
+          compare: null
+        },
+        {
+          form: "kona",
+          gloss: "woman; wife",
+          pos: "f. noun (ōn-stem)",
+          label: "ATTESTED",
+          labelNote: "NORMALIZED classical form",
+          grammar: "Nom. sg. kona; gen. konu; dat. konu; acc. konu. Weak feminine. Pl. konur.",
+          clearSpeak: "KOH-nah",
+          compare: null
+        },
+        {
+          form: "land",
+          gloss: "land; country",
+          pos: "n. noun (a-stem)",
+          label: "ATTESTED",
+          labelNote: "NORMALIZED; widespread in compounds (e.g. Ísland)",
+          grammar: "Nom./acc. sg. land; gen. lands; dat. landi. Strong neuter. Pl. lǫnd (u-umlaut).",
+          clearSpeak: "LAHND",
+          compare: null
+        },
+        {
+          form: "vera",
+          gloss: "to be",
+          pos: "verb (anomalous)",
+          label: "ATTESTED",
+          labelNote: "NORMALIZED infinitive of the highly irregular verb ‘to be’",
+          grammar: "Pres. ind. em, ert, er, erum, eruð, eru. Past var / váru. Essential copula — full paradigm in Lesson 3.",
+          clearSpeak: "VEH-rah",
+          compare: null
+        },
+        {
+          form: "heita",
+          gloss: "to be called; to be named",
+          pos: "verb (strong, VII)",
+          label: "ATTESTED",
+          labelNote: "NORMALIZED; formulaic in introductions (X heitir…)",
+          grammar: "Pres. ind. heiti, heitir, heitir, heitum, heitið, heita. Past hét. Used for names: Ek heiti… ‘I am called…’.",
+          clearSpeak: "HAY-tah",
+          compare: {
+            label: "MODERN ICELANDIC — NOT OLD NORSE",
+            text: "Mod. Icel. heita remains cognate and similar in use, but do not assume identical paradigms or pronunciation."
+          }
+        }
+      ]
+    },
+    {
+      id: "practice-tips",
+      title: "How to practise this lesson",
+      html: `
+        <ol class="scholar-list">
+          <li>Read each special letter aloud with its conventional value (þ, ð, ǫ, æ, œ).</li>
+          <li>Memorise the five vocabulary items with gender/part of speech and label.</li>
+          <li>Complete the exercises below; unlock Lesson 2 only after they are marked complete.</li>
+          <li>Missed items go to Spaced review for later recall.</li>
+        </ol>
+      `
+    }
+  ],
+
+  exercises: [
+    {
+      id: "l1-e1",
+      type: "multiple",
+      prompt: "Which letter represents the voiced dental fricative (as in English <em>this</em>) in Classical ON orthography?",
+      choices: [
+        { id: "a", text: "þ (thorn)" },
+        { id: "b", text: "ð (eth)" },
+        { id: "c", text: "ǫ (o caudata)" },
+        { id: "d", text: "æ (ash)" }
+      ],
+      answer: "b",
+      hint: "Thorn þ is voiceless /θ/; eth ð is voiced /ð/.",
+      explanation: "ð (eth) = /ð/. þ (thorn) = /θ/."
+    },
+    {
+      id: "l1-e2",
+      type: "multiple",
+      prompt: "Where does primary stress fall in a native Old Norse word?",
+      choices: [
+        { id: "a", text: "On the final syllable" },
+        { id: "b", text: "On the first syllable" },
+        { id: "c", text: "On the penultimate syllable, as in Latin" },
+        { id: "d", text: "Stress is free and unpredictable" }
+      ],
+      answer: "b",
+      hint: "Germanic initial stress is the rule for native vocabulary.",
+      explanation: "Primary stress falls on the first syllable."
+    },
+    {
+      id: "l1-e3",
+      type: "text",
+      prompt: "Write the Classical ON noun meaning ‘man; person’ (nom. sg.), using ð if needed.",
+      accept: ["maðr"],
+      acceptNormalize: true,
+      hint: "Consists of three consonants around a short a — ends in -r.",
+      explanation: "maðr (m.) — ATTESTED / NORMALIZED. Not Modern Icelandic maður."
+    },
+    {
+      id: "l1-e4",
+      type: "text",
+      prompt: "What is the infinitive ‘to be’ in Classical Old Norse?",
+      accept: ["vera"],
+      acceptNormalize: true,
+      hint: "Anomalous verb; four letters.",
+      explanation: "vera — ATTESTED / NORMALIZED infinitive."
+    },
+    {
+      id: "l1-e5",
+      type: "multiple",
+      prompt: "The form <em>kona</em> ‘woman; wife’ is best labelled as:",
+      choices: [
+        { id: "a", text: "RECONSTRUCTED Proto-Norse only" },
+        { id: "b", text: "ATTESTED (NORMALIZED classical form)" },
+        { id: "c", text: "A Modern Icelandic word presented as Old Norse" },
+        { id: "d", text: "An invented Viking-festival coinage" }
+      ],
+      answer: "b",
+      hint: "Check the vocabulary labels in this lesson.",
+      explanation: "kona is ATTESTED and taught in NORMALIZED classical form. We never invent fake Viking words."
+    },
+    {
+      id: "l1-e6",
+      type: "text",
+      prompt: "Write the ON verb meaning ‘to be called / named’ (infinitive).",
+      accept: ["heita"],
+      acceptNormalize: true,
+      hint: "Used in introductions: Ek … ‘I am called…’.",
+      explanation: "heita — ATTESTED / NORMALIZED. Strong verb class VII."
+    },
+    {
+      id: "l1-e7",
+      type: "multiple",
+      prompt: "True or false for this course: Modern Icelandic pronunciation of á as a diphthong [au] should be taught as Classical Old Norse without a warning label.",
+      choices: [
+        { id: "a", text: "True — they are the same language" },
+        { id: "b", text: "False — that would present Modern Icelandic as Old Norse" }
+      ],
+      answer: "b",
+      hint: "Re-read the charter and the length/stress section.",
+      explanation: "False. Classical ON á is conventionally /ɑː/. Mod. Icel. diphthongization must be labelled MODERN ICELANDIC — NOT OLD NORSE."
+    },
+    {
+      id: "l1-e8",
+      type: "matching-note",
+      prompt: "Match mentally: land — gender?",
+      choices: [
+        { id: "a", text: "Masculine" },
+        { id: "b", text: "Feminine" },
+        { id: "c", text: "Neuter" }
+      ],
+      answer: "c",
+      hint: "Strong a-stem; nom. = acc. in the singular.",
+      explanation: "land is neuter (n.). Pl. lǫnd shows u-umlaut."
+    }
+    ,
+    {
+      id: "l1-v1",
+      type: "speak",
+      prompt: "Pronounce thorn: þ",
+      target: "þ",
+      clearSpeak: "th as in thin",
+      gloss: "voiceless dental fricative /θ/ (as in English thin)",
+      label: "NORMALIZED",
+      reconstructedNotes: "Target: clear /θ/ — tongue tip at teeth, continuous fricative, no /t/ or /d/ stop. Word-initial quality as in þing, þú (when you meet them later).",
+      historicalCues: [
+        "Continuous fricative, not a stop",
+        "Voiceless (no vocal-fold buzz like ð)",
+        "Dental place (thin, not sin)"
+      ],
+      rubricTips: [
+        "Say English thin then isolate the first sound — that approximates ON þ.",
+        "Do not substitute /f/ or /s/.",
+        "This is a reconstructed Classical value, not Modern Icelandic coaching disguised as ON."
+      ]
+    },
+    {
+      id: "l1-v2",
+      type: "speak",
+      prompt: "Pronounce eth: ð",
+      target: "ð",
+      clearSpeak: "th as in this",
+      gloss: "voiced dental fricative /ð/ (as in English this)",
+      label: "NORMALIZED",
+      reconstructedNotes: "Target: voiced /ð/. Contrast with þ. Medial/final eth appears in maðr, Óðinn.",
+      historicalCues: [
+        "Voiced fricative (vocal fold vibration)",
+        "Same place as þ, different voicing",
+        "Not a hard /d/ stop"
+      ],
+      rubricTips: [
+        "English this → isolate ð.",
+        "In maðr, ð is medial — keep it fricative between vowels/consonants.",
+        "ASR will often mishear ð; ignore English ASR as ground truth."
+      ]
+    },
+    {
+      id: "l1-v3",
+      type: "speak",
+      prompt: "Describe and approximate ǫ (o caudata)",
+      target: "ǫ",
+      clearSpeak: "aw as in law, short and rounded",
+      gloss: "open rounded back vowel /ɔ/ (often written ö in some editions)",
+      label: "NORMALIZED",
+      reconstructedNotes: "Say a short open o (as in many transcriptions of British not /ɒ/–/ɔ/, or roughly aw with lips rounded but short). Not Modern Icelandic ö-quality claimed as historical ON without a label.",
+      historicalCues: [
+        "Back, rounded, open-mid",
+        "Short unless marked long in a given word",
+        "Distinct from ó /oː/ and from a /a/"
+      ],
+      rubricTips: [
+        "Practice the sound in isolation, then recall pl. lǫnd from land.",
+        "Recording + self-rate is the goal; no historical ON TTS is claimed here."
+      ]
+    },
+    {
+      id: "l1-v4",
+      type: "speak",
+      prompt: "Length contrast: a (short) vs á (long)",
+      target: "a — á",
+      clearSpeak: "ah, short — then aa, long ah (hold longer, no ow diphthong)",
+      gloss: "short /a/ vs long /ɑː/ (conventional Classical values)",
+      label: "NORMALIZED",
+      reconstructedNotes: "Hold á roughly twice as long as a. Classical á is taught as a long monophthong /ɑː/ — NOT the Modern Icelandic diphthong [au] unless labelled MODERN ICELANDIC — NOT OLD NORSE.",
+      historicalCues: [
+        "Same vowel quality family, different duration",
+        "á held longer (≈ two beats vs one)",
+        "No [au] diphthong for Classical ON á in this course"
+      ],
+      rubricTips: [
+        "Tap once for a, twice-length for á.",
+        "If you diphthongize, correct toward a steady long vowel for ON practice."
+      ]
+    },
+    {
+      id: "l1-v5",
+      type: "speak",
+      prompt: "Say: maðr",
+      target: "maðr",
+      clearSpeak: "MAHTH-r (th as in this)",
+      gloss: "man; person",
+      label: "ATTESTED",
+      reconstructedNotes: "Stress on first (only) syllable. Short a. Medial ð as /ð/. Final -r pronounced as a morphological ending (not silent).",
+      historicalCues: [
+        "Initial stress",
+        "ð fricative, not /d/",
+        "Audible final -r"
+      ],
+      rubricTips: [
+        "MAÐ-r — avoid Modern Icelandic maður as if it were the ON citation form.",
+        "Self-check: length short on a; ð voiced; -r present."
+      ]
+    },
+    {
+      id: "l1-v6",
+      type: "speak",
+      prompt: "Say: kona",
+      target: "kona",
+      clearSpeak: "KOH-nah",
+      gloss: "woman; wife",
+      label: "ATTESTED",
+      reconstructedNotes: "Two syllables; stress on ko-. Short vowels. Clear n.",
+      historicalCues: [
+        "Stress on first syllable",
+        "Two clear syllables: KO-na",
+        "No reduction of the final a to schwa as a required ON rule"
+      ],
+      rubricTips: [
+        "Keep both vowels; do not swallow -a.",
+        "ATTESTED / NORMALIZED weak feminine."
+      ]
+    },
+    {
+      id: "l1-v7",
+      type: "speak",
+      prompt: "Say: Þórr",
+      target: "Þórr",
+      clearSpeak: "THOR (th as in thin, long o)",
+      gloss: "Thor (theonym)",
+      label: "ATTESTED",
+      reconstructedNotes: "Initial þ /θ/. Long ó /oː/. Double rr — hold/trilled or clearly lengthened r-quality per your dialect training; do not drop it. Stress initial.",
+      historicalCues: [
+        "þ not /t/ or /f/",
+        "Long ó (duration)",
+        "Final geminate/long r audible"
+      ],
+      rubricTips: [
+        "ÞÓRR — thorn + long o + rr.",
+        "Do not use Modern Icelandic citation as unmarked ON pronunciation coaching."
+      ]
+    },
+    {
+      id: "l1-v8",
+      type: "speak",
+      prompt: "Say: Óðinn",
+      target: "Óðinn",
+      clearSpeak: "OH-thin (th as in this)",
+      gloss: "Odin (theonym)",
+      label: "ATTESTED",
+      reconstructedNotes: "Long Ó /oː/. Medial ð /ð/. Double nn. Stress on first syllable. NORMALIZED classical form of a thoroughly attested name.",
+      historicalCues: [
+        "Long initial Ó",
+        "ð fricative (not /d/)",
+        "Geminate nn — hold the n"
+      ],
+      rubricTips: [
+        "Ó-ðinn — length on Ó; ð not d; nn doubled.",
+        "ASR may output Odin/Othin; that is not a historical grade."
+      ]
+    }
+
+  ]
+};
+
+
+/* ==== data/lesson2.js ==== */
+/**
+ * Lesson 2 — Placeholder shell (locked until Lesson 1 complete)
+ */
+window.NORDRONA = window.NORDRONA || {};
+window.NORDRONA.lessons = window.NORDRONA.lessons || {};
+
+window.NORDRONA.lessons[2] = {
+  id: 2,
+  slug: "lesson-2",
+  title: "Nouns I: strong masculines & articles",
+  subtitle: "Coming next — shell only",
+  locked: true,
+  placeholder: true,
+  sections: [
+    {
+      id: "preview",
+      title: "Preview",
+      html: `
+        <p>This lesson will introduce strong masculine nouns (a-stems and related), the definite article suffix, and practice with <em>maðr</em> and further ATTESTED / NORMALIZED vocabulary.</p>
+        <p class="muted">Content will be added in a later release. Complete Lesson 1 exercises to unlock this slot in your progress map.</p>
+      `
+    }
+  ],
+  exercises: []
+};
+
+
+/* ==== data/lesson3.js ==== */
+/**
+ * Lesson 3 — Placeholder shell (locked until Lesson 2 complete)
+ */
+window.NORDRONA = window.NORDRONA || {};
+window.NORDRONA.lessons = window.NORDRONA.lessons || {};
+
+window.NORDRONA.lessons[3] = {
+  id: 3,
+  slug: "lesson-3",
+  title: "Verbs I: vera, heita & present indicative",
+  subtitle: "Coming later — shell only",
+  locked: true,
+  placeholder: true,
+  sections: [
+    {
+      id: "preview",
+      title: "Preview",
+      html: `
+        <p>This lesson will expand <em>vera</em> and <em>heita</em> into full present indicative paradigms, with carefully labelled forms and short reading drills.</p>
+        <p class="muted">Placeholder shell. Unlock requires Lesson 2 completion (when that lesson is populated).</p>
+      `
+    }
+  ],
+  exercises: []
+};
+
+
+/* ==== data/futhark.js ==== */
+/**
+ * Elder Futhark module — parallel writing-system track
+ * NOT the script of medieval ON manuscripts (those use Latin).
+ * Scholarly / epigraphic tone — no New-Age “rune magic”.
+ */
+window.NORDRONA = window.NORDRONA || {};
+
+window.NORDRONA.futhark = {
+  title: "Elder Futhark",
+  subtitle: "Migration-Period runes — a parallel track, not saga orthography",
+
+  chronology: {
+    title: "Critical chronology",
+    points: [
+      {
+        name: "Elder Futhark",
+        period: "c. 2nd–8th centuries",
+        script: "24-rune row",
+        use: "Migration Period / early Proto-Norse (Northwest Germanic) inscriptions on stone, metal, bone, etc."
+      },
+      {
+        name: "Younger Futhark",
+        period: "Viking Age (c. 8th–12th c.)",
+        script: "Reduced 16-rune system",
+        use: "Scandinavian runic inscriptions of the Viking Age; many phonemic distinctions collapsed into fewer graphs."
+      },
+      {
+        name: "Medieval runes",
+        period: "High/Late Middle Ages",
+        script: "Expanded inventories building on Younger Futhark",
+        use: "Later medieval Scandinavian runic literacy alongside Latin script."
+      },
+      {
+        name: "Classical Old Norse (literary)",
+        period: "Manuscript culture c. 12th–14th c. (normalized editions)",
+        script: "Latin alphabet (+ þ ð ǫ æ œ, etc.)",
+        use: "Sagas, Eddaic and skaldic poetry as we read them in scholarly editions — primarily Latin orthography, NOT Elder Futhark."
+      }
+    ],
+    warnings: [
+      "Elder Futhark ≠ the writing system of medieval Icelandic/Norwegian manuscripts.",
+      "Heimskringla, the Poetic Edda manuscripts, Family Sagas, etc. are Latin-script books (with þ, ð, etc.). Writing Eddaic Old Norse in Elder Futhark and calling that historically typical for those texts is anachronistic.",
+      "Rune names below are scholarly conventional (often from later tradition); early name forms are partly reconstructed or known from later sources — treat names as conventional labels, not magic."
+    ]
+  },
+
+  row: [
+    { glyph: "ᚠ", name: "fehu", value: "/f/", note: "Conventional name; f-sound." },
+    { glyph: "ᚢ", name: "uruz", value: "/u/", note: "u-vowel; later developments interact with ON ú/u." },
+    { glyph: "ᚦ", name: "thurisaz", value: "/θ/ (þ-lineage)", note: "Dental fricative lineage → ON þ / ð distinction in Latin orthography." },
+    { glyph: "ᚨ", name: "ansuz", value: "/a/", note: "a-vowel; important for later North Germanic vowel history." },
+    { glyph: "ᚱ", name: "raidho", value: "/r/", note: "r-sound." },
+    { glyph: "ᚲ", name: "kenaz", value: "/k/", note: "Also seen as kaunan in some traditions; k-sound." },
+    { glyph: "ᚷ", name: "gebo", value: "/ɡ/", note: "g-sound." },
+    { glyph: "ᚹ", name: "wunjo", value: "/w/", note: "w-approximant — contrast later ON v (Latin orthography)." },
+    { glyph: "ᚺ", name: "hagalaz", value: "/h/", note: "h-sound (shape variants exist)." },
+    { glyph: "ᚾ", name: "naudiz", value: "/n/", note: "n-sound." },
+    { glyph: "ᛁ", name: "isaz", value: "/i/", note: "i-vowel." },
+    { glyph: "ᛃ", name: "jera", value: "/j/", note: "j-approximant — correlates with later ON j." },
+    { glyph: "ᛇ", name: "eihwaz", value: "/iː/~/æː/ (debated)", note: "Value debated in runology; do not overclaim." },
+    { glyph: "ᛈ", name: "perthro", value: "/p/", note: "p-sound; name traditional/conventional." },
+    { glyph: "ᛉ", name: "algiz", value: "/z/ (→ ON -r lineage)", note: "Often linked to Proto-Germanic *z; North Germanic rhotacism is a later story told in grammars, not by this glyph alone." },
+    { glyph: "ᛊ", name: "sowilo", value: "/s/", note: "s-sound (variants ᛋ)." },
+    { glyph: "ᛏ", name: "tiwaz", value: "/t/", note: "t-sound." },
+    { glyph: "ᛒ", name: "berkano", value: "/b/", note: "b-sound." },
+    { glyph: "ᛖ", name: "ehwaz", value: "/e/", note: "e-vowel." },
+    { glyph: "ᛗ", name: "mannaz", value: "/m/", note: "m-sound." },
+    { glyph: "ᛚ", name: "laguz", value: "/l/", note: "l-sound." },
+    { glyph: "ᛜ", name: "ingwaz", value: "/ŋ/", note: "velar nasal ŋ — not a separate Latin letter in ON, but relevant phonetically in clusters." },
+    { glyph: "ᛞ", name: "dagaz", value: "/d/", note: "d-sound." },
+    { glyph: "ᛟ", name: "othala", value: "/o/", note: "o-vowel; conventional name othala/odal." }
+  ],
+
+  correlations: {
+    title: "Significant correlations for later Old Norse learners",
+    items: [
+      {
+        title: "ᚦ thurisaz ↔ þ / ð",
+        text: "Elder Futhark has a dedicated dental-fricative rune (thurisaz). Classical ON Latin orthography distinguishes voiceless þ and voiced ð. The rune shows that a þ-like fricative was already worth writing in the Proto-Norse period; the later þ/ð split and Latin spelling conventions are a manuscript-age story (see Lesson 1)."
+      },
+      {
+        title: "ᚨ ansuz ↔ a-vowels",
+        text: "Ansuz writes an a-quality vowel in early inscriptions. Old Norse later has a rich short/long and umlauted vowel system (a á ǫ æ œ …) that Latin orthography can mark more finely than a 16-rune Viking-Age row."
+      },
+      {
+        title: "Why Younger Futhark loses distinctions",
+        text: "Younger Futhark compresses ~24 graphs to 16. Several vowels and consonants share runes. That is why Viking-Age runic spelling is often ambiguous — and why normalized Latin Old Norse (with length marks, þ/ð, ǫ, etc.) preserves more phonological information for learners than a 16-rune inventory can."
+      },
+      {
+        title: "*w (wunjo ᚹ) vs later ON v",
+        text: "Proto-Norse/early NWGmc had a w-approximant written with wunjo. In Old Norse Latin orthography the corresponding historical segment is typically written v (e.g. in words descending from *w-). Do not read modern English w into every ON v, and do not pretend Elder Futhark wunjo is how saga manuscripts spell."
+      },
+      {
+        title: "*j (jera ᛃ) vs ON j",
+        text: "Jera correlates with a j-glide. Classical ON writes j in Latin script (e.g. jǫrð). Continuity of the approximant is real; the writing system changed."
+      },
+      {
+        title: "ŋ / ingwaz ᛜ",
+        text: "Ingwaz is conventionally linked to the velar nasal /ŋ/. Old Norse has no separate ŋ letter; nasals assimilate in clusters (n before g/k, etc.). The rune is a reminder that early epigraphy sometimes encoded nasality more explicitly than ON Latin spelling does."
+      },
+      {
+        title: "Do not write Eddaic ON in Elder Futhark as ‘typical’",
+        text: "The Poetic Edda and prose sagas survive in Latin-script manuscripts. Transliterating normalized ON into Elder Futhark may be a classroom cipher exercise, but it is not historically how those texts were written. Label any such exercise as anachronistic practice, not manuscript fact."
+      }
+    ]
+  },
+
+  sideBySide: {
+    title: "Side-by-side: early runic vs NORMALIZED Old Norse",
+    intro: "Famous correlations exist between early runic inscriptions (Proto-Norse / early NWGmc) and later Old Norse forms. Where the early form is reconstructed or debated, it is labelled.",
+    rows: [
+      {
+        topic: "‘Horn’ formula (type)",
+        runic: "ek … hlewagastiz holtijaz horna tawido (type of early inscriptional formula)",
+        runicLabel: "ATTESTED (inscriptional; normalized scholarly transcription)",
+        onLatin: "Related later lexicon includes ON horn ‘horn’ (n.) — NORMALIZED classical form.",
+        onLabel: "ATTESTED",
+        note: "The Gallehus-type formula is Proto-Norse, centuries before Classical ON manuscripts. Cognate vocabulary ≠ same language stage."
+      },
+      {
+        topic: "Dental fricative continuity",
+        runic: "ᚦ (thurisaz) in Elder Futhark inventories / inscriptions",
+        runicLabel: "ATTESTED (as graph)",
+        onLatin: "ON þ / ð in maðr, Þórr, Óðinn (Lesson 1)",
+        onLabel: "ATTESTED",
+        note: "Graph continuity for a dental fricative; voicing split and Latin þ/ð are taught in the sound-system lesson."
+      },
+      {
+        topic: "Divine name (illustration)",
+        runic: "Early theonyms appear in runic sources in period-appropriate forms (not Classical ON spelling).",
+        runicLabel: "uncertain / period-specific",
+        onLatin: "Óðinn, Þórr — NORMALIZED Classical ON Latin forms used in editions",
+        onLabel: "ATTESTED",
+        note: "Do not paste Elder Futhark over normalized Óðinn and call it a Heimskringla manuscript reading."
+      },
+      {
+        topic: "‘Guest’ etymon (schematic)",
+        runic: "Proto-Norse *-gastiz (as in name-elements; RECONSTRUCTED citation form for the stem)",
+        runicLabel: "RECONSTRUCTED (stem shape; elements ATTESTED in compounds)",
+        onLatin: "ON gestr ‘guest’ — NORMALIZED",
+        onLabel: "ATTESTED",
+        note: "Illustrates sound change and morphological trimming over centuries — not interchangeable spellings of one stage."
+      }
+    ]
+  },
+
+  linkToLesson1: {
+    title: "Link to Lesson 1 (sound system)",
+    text: "Lesson 1 teaches þ, ð, vowel length (a vs á), and stress in Latin-script Classical ON. Elder Futhark could mark a dental fricative (ᚦ) and various vowels, but it does not give you the manuscript þ/ð orthographic split, acute length marks, or ǫ/æ/œ of normalized editions. Younger Futhark is even more underspecified. Use runes to understand prehistory; use Latin normalized ON to read sagas."
+  },
+
+  quiz: [
+    {
+      id: "ef-q1",
+      type: "multiple",
+      prompt: "True or false: Elder Futhark is the normal writing system of medieval Icelandic saga manuscripts (e.g. Heimskringla).",
+      choices: [
+        { id: "a", text: "True" },
+        { id: "b", text: "False" }
+      ],
+      answer: "b",
+      hint: "Re-read the chronology: manuscripts use Latin script.",
+      explanation: "False. Medieval Icelandic/Norwegian literary manuscripts use Latin orthography. Elder Futhark belongs to Migration-Period / early Proto-Norse epigraphy."
+    },
+    {
+      id: "ef-q2",
+      type: "multiple",
+      prompt: "Which script is primarily used for Classical Old Norse as taught in normalized editions?",
+      choices: [
+        { id: "a", text: "Elder Futhark (24 runes)" },
+        { id: "b", text: "Latin alphabet with þ ð and vowel marks" },
+        { id: "c", text: "Only Younger Futhark (16 runes)" },
+        { id: "d", text: "Emojis" }
+      ],
+      answer: "b",
+      hint: "Think sagas and dictionaries like Zoëga.",
+      explanation: "Normalized Classical ON is learned in Latin orthography (þ, ð, ǫ, length, etc.)."
+    },
+    {
+      id: "ef-q3",
+      type: "multiple",
+      prompt: "Which rune is conventionally linked to the dental-fricative lineage relevant to ON þ/ð?",
+      choices: [
+        { id: "a", text: "ᚨ ansuz" },
+        { id: "b", text: "ᚦ thurisaz" },
+        { id: "c", text: "ᛜ ingwaz" },
+        { id: "d", text: "ᚹ wunjo" }
+      ],
+      answer: "b",
+      hint: "Looks like a thorn-related shape family.",
+      explanation: "ᚦ thurisaz ↔ þ-lineage dental fricative. ON Latin spelling later distinguishes þ and ð."
+    },
+    {
+      id: "ef-q4",
+      type: "multiple",
+      prompt: "Younger Futhark reduces the row to about how many runes, making Viking-Age spelling often ambiguous?",
+      choices: [
+        { id: "a", text: "32" },
+        { id: "b", text: "24" },
+        { id: "c", text: "16" },
+        { id: "d", text: "5" }
+      ],
+      answer: "c",
+      hint: "Compression is the key Viking-Age runic story.",
+      explanation: "Younger Futhark ≈ 16 runes. Latin normalized ON can preserve more contrasts than those 16 graphs."
+    },
+    {
+      id: "ef-q5",
+      type: "multiple",
+      prompt: "Wunjo (ᚹ) is most relevant as a correlate of which early sound, versus later ON Latin v?",
+      choices: [
+        { id: "a", text: "/w/ approximant" },
+        { id: "b", text: "/ŋ/" },
+        { id: "c", text: "Only /f/" },
+        { id: "d", text: "Click consonants" }
+      ],
+      answer: "a",
+      hint: "See correlations: *w vs later v.",
+      explanation: "/w/ written with wunjo in Elder Futhark; later ON typically writes historical *w as v in Latin script."
+    },
+    {
+      id: "ef-q6",
+      type: "multiple",
+      prompt: "For a Heimskringla manuscript page, which is historically appropriate?",
+      choices: [
+        { id: "a", text: "Entire text in Elder Futhark as the normal book hand" },
+        { id: "b", text: "Latin script (medieval book hand), not Elder Futhark" },
+        { id: "c", text: "Only ogham" },
+        { id: "d", text: "Only Modern Icelandic SMS abbreviations" }
+      ],
+      answer: "b",
+      hint: "Charter + chronology.",
+      explanation: "Heimskringla manuscripts are Latin-script medieval books. Elder Futhark is the wrong century and medium for ‘typical’ saga text."
+    }
+  ]
+};
+
+
+/* ==== js/progress.js ==== */
+/**
+ * Norðrœna — path progress (XP, streak, completed levels)
+ * localStorage key v2 for Duolingo-style path.
+ */
+(function (global) {
+  const KEY = "nordrona_progress_v2";
+  const LEGACY = "nordrona_progress_v1";
+
+  function todayKey() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + day;
+  }
+
+  function yesterdayKey() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + day;
+  }
+
+  function defaultState() {
+    return {
+      version: 2,
+      completedLevels: {},
+      currentLevelId: null,
+      xp: 0,
+      streak: 0,
+      lastActiveDay: null,
+      reviewQueue: [],
+      voiceRecordings: {},
+      hearts: 5,
+      lastUpdated: null
+    };
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        return Object.assign(defaultState(), JSON.parse(raw));
+      }
+    } catch (e) {}
+    return defaultState();
+  }
+
+  function save(state) {
+    state.lastUpdated = new Date().toISOString();
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    } catch (e) {}
+    return state;
+  }
+
+  function touchStreak() {
+    const s = load();
+    const today = todayKey();
+    if (s.lastActiveDay === today) {
+      return s;
+    }
+    if (s.lastActiveDay === yesterdayKey()) {
+      s.streak = (s.streak || 0) + 1;
+    } else if (!s.lastActiveDay) {
+      s.streak = 1;
+    } else {
+      s.streak = 1;
+    }
+    s.lastActiveDay = today;
+    return save(s);
+  }
+
+  function isLevelComplete(levelId) {
+    const s = load();
+    return !!(s.completedLevels && s.completedLevels[levelId]);
+  }
+
+  function getCompletedSet() {
+    return load().completedLevels || {};
+  }
+
+  function getLinearIds() {
+    const path = global.NORDRONA && global.NORDRONA.path;
+    if (!path || !path.getLinearPlayable) return [];
+    return path.getLinearPlayable().map((x) => x.level.id);
+  }
+
+  function isLevelUnlocked(levelId) {
+    const found = global.NORDRONA.path.findLevel(levelId);
+    // Study-notes / classic lesson nodes: available whenever the section is playable
+    if (found && (found.level.notesOnly || found.level.type === "notes")) {
+      if (found.level.lockedShell || found.section.comingSoon || !found.section.unlocked) return false;
+      return true;
+    }
+    const ids = getLinearIds();
+    const idx = ids.indexOf(levelId);
+    if (idx === -1) {
+      if (!found) return false;
+      if (found.level.lockedShell || found.section.comingSoon) return false;
+      return false;
+    }
+    if (idx === 0) return true;
+    for (let i = 0; i < idx; i++) {
+      if (!isLevelComplete(ids[i])) return false;
+    }
+    return true;
+  }
+
+  function getContinueLevelId() {
+    const ids = getLinearIds();
+    for (let i = 0; i < ids.length; i++) {
+      if (!isLevelComplete(ids[i])) return ids[i];
+    }
+    return ids.length ? ids[ids.length - 1] : null;
+  }
+
+  function completeLevel(levelId, opts) {
+    opts = opts || {};
+    const s = touchStreak();
+    s.completedLevels[levelId] = {
+      at: new Date().toISOString(),
+      perfect: !!opts.perfect,
+      mistakes: opts.mistakes || 0
+    };
+    const path = global.NORDRONA.path;
+    const base = (path && path.xpPerLevel) || 10;
+    const bonus = opts.perfect ? (path && path.xpPerPerfect) || 15 : base;
+    s.xp = (s.xp || 0) + (opts.perfect ? bonus : base);
+    save(s);
+    s.currentLevelId = getContinueLevelId();
+    return save(s);
+  }
+
+  function getStats() {
+    const s = load();
+    // refresh streak break if missed a day
+    const today = todayKey();
+    let streak = s.streak || 0;
+    if (s.lastActiveDay && s.lastActiveDay !== today && s.lastActiveDay !== yesterdayKey()) {
+      streak = 0;
+    }
+    return {
+      xp: s.xp || 0,
+      streak,
+      completedCount: Object.keys(s.completedLevels || {}).length,
+      currentLevelId: s.currentLevelId || getContinueLevelId(),
+      heartsMax: (global.NORDRONA.path && global.NORDRONA.path.heartsMax) || 5
+    };
+  }
+
+  function addToReview(item) {
+    const s = load();
+    if (!s.reviewQueue.some((q) => q.id === item.id)) {
+      s.reviewQueue.push({
+        id: item.id,
+        levelId: item.levelId,
+        prompt: item.prompt,
+        answer: item.answer,
+        explanation: item.explanation || "",
+        addedAt: new Date().toISOString()
+      });
+      save(s);
+    }
+    return s.reviewQueue;
+  }
+
+  function getReviewQueue() {
+    return load().reviewQueue || [];
+  }
+
+  function removeFromReview(id) {
+    const s = load();
+    s.reviewQueue = (s.reviewQueue || []).filter((q) => q.id !== id);
+    save(s);
+    return s.reviewQueue;
+  }
+
+  function markVoice(exerciseId, payload) {
+    const s = load();
+    s.voiceRecordings[exerciseId] = {
+      savedAt: new Date().toISOString(),
+      selfRatings: payload.selfRatings || {},
+      hadRecording: !!payload.hadRecording,
+      checklistSubmitted: !!payload.checklistSubmitted
+    };
+    return save(s);
+  }
+
+  function resetAll() {
+    try {
+      localStorage.removeItem(KEY);
+      localStorage.removeItem(LEGACY);
+    } catch (e) {}
+    return defaultState();
+  }
+
+  // Legacy stubs so old review/app bits don't crash
+  function isLessonComplete() { return false; }
+  function isLessonUnlocked(id) { return id === 1; }
+  function lessonState() {
+    return { writtenComplete: false, voiceComplete: false, writtenAnswers: {}, voiceDone: {} };
+  }
+
+  global.NORDRONA = global.NORDRONA || {};
+  global.NORDRONA.progress = {
+    load,
+    save,
+    touchStreak,
+    isLevelComplete,
+    isLevelUnlocked,
+    getContinueLevelId,
+    completeLevel,
+    getStats,
+    getCompletedSet,
+    addToReview,
+    getReviewQueue,
+    removeFromReview,
+    markVoice,
+    resetAll,
+    // legacy
+    isLessonComplete,
+    isLessonUnlocked,
+    lessonState,
+    KEY
+  };
+})(window);
+
+
+/* ==== js/exercises.js ==== */
+/**
+ * Norðrœna — exercise grading for path session types
+ */
+(function (global) {
+  function normalizeAnswer(s) {
+    return String(s || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFC")
+      .replace(/\s+/g, " ");
+  }
+
+  function gradeWritten(exercise, userInput) {
+    const type = exercise.type;
+
+    if (
+      type === "multiple" ||
+      type === "matching-note" ||
+      type === "truefalse" ||
+      type === "tap_hear" ||
+      type === "listen_choice" ||
+      type === "translate_on_en" ||
+      type === "fill"
+    ) {
+      if (type === "fill" && exercise.accept && !exercise.choices) {
+        const norm = normalizeAnswer(userInput);
+        const accept = (exercise.accept || []).map(normalizeAnswer);
+        const correct = accept.indexOf(norm) !== -1;
+        return {
+          correct,
+          expected: exercise.accept[0],
+          explanation: exercise.explanation || "",
+          hint: exercise.hint || ""
+        };
+      }
+      // fill with choices, or MC-like: userInput is choice id
+      if (type === "fill" && exercise.choices && exercise.accept) {
+        // user may send choice id or typed text
+        const byId = (exercise.choices || []).find((c) => c.id === userInput);
+        const textVal = byId ? byId.text : userInput;
+        const norm = normalizeAnswer(textVal);
+        const accept = (exercise.accept || []).map(normalizeAnswer);
+        const correct =
+          accept.indexOf(norm) !== -1 ||
+          (exercise.answer && userInput === exercise.answer);
+        // also allow matching choice whose text is accept
+        let ok = correct;
+        if (!ok && byId) ok = accept.indexOf(normalizeAnswer(byId.text)) !== -1;
+        return {
+          correct: ok,
+          expected: exercise.accept[0],
+          explanation: exercise.explanation || "",
+          hint: exercise.hint || ""
+        };
+      }
+      const correct = userInput === exercise.answer;
+      return {
+        correct,
+        expected: exercise.answer,
+        explanation: exercise.explanation || "",
+        hint: exercise.hint || ""
+      };
+    }
+
+    if (type === "text") {
+      const norm = normalizeAnswer(userInput);
+      const accept = (exercise.accept || []).map(normalizeAnswer);
+      const correct = accept.indexOf(norm) !== -1;
+      return {
+        correct,
+        expected: (exercise.accept && exercise.accept[0]) || "",
+        explanation: exercise.explanation || "",
+        hint: exercise.hint || ""
+      };
+    }
+
+    if (type === "tiles") {
+      const norm = normalizeAnswer(userInput);
+      const ans = normalizeAnswer(exercise.answer);
+      return {
+        correct: norm === ans,
+        expected: exercise.answer,
+        explanation: exercise.explanation || "",
+        hint: exercise.hint || ""
+      };
+    }
+
+    if (type === "match") {
+      // userInput: { left: right, ... } or JSON string
+      let map = userInput;
+      if (typeof userInput === "string") {
+        try {
+          map = JSON.parse(userInput);
+        } catch (e) {
+          map = {};
+        }
+      }
+      const pairs = exercise.pairs || [];
+      let correct = true;
+      const expected = {};
+      pairs.forEach((p) => {
+        expected[p.left] = p.right;
+        if (normalizeAnswer(map[p.left]) !== normalizeAnswer(p.right)) correct = false;
+      });
+      if (Object.keys(map || {}).length !== pairs.length) correct = false;
+      return {
+        correct,
+        expected,
+        explanation: exercise.explanation || "",
+        hint: exercise.hint || ""
+      };
+    }
+
+    if (type === "speak" || type === "lore" || type === "listen") {
+      // handled in session UI (self-complete)
+      return { correct: true, expected: "", explanation: "", hint: "" };
+    }
+
+    return { correct: false, expected: "", explanation: "Unknown exercise type: " + type };
+  }
+
+  global.NORDRONA = global.NORDRONA || {};
+  global.NORDRONA.exercises = { normalizeAnswer, gradeWritten };
+})(window);
+
+
+/* ==== js/voice.js ==== */
+/**
+ * Norðrœna — microphone recording + optional SpeechRecognition aid
+ * Historical ON: ASR is NEVER ground truth. Record / playback / self-rate.
+ */
+(function (global) {
+  let mediaStream = null;
+  let mediaRecorder = null;
+  let chunks = [];
+  let lastBlobUrl = null;
+  let permissionState = "unknown"; // unknown | granted | denied | unsupported
+
+  function isSecureContextOk() {
+    return (
+      global.isSecureContext ||
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1" ||
+      location.protocol === "file:"
+    );
+  }
+
+  function getSpeechRecognitionCtor() {
+    return global.SpeechRecognition || global.webkitSpeechRecognition || null;
+  }
+
+  async function requestMic() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      permissionState = "unsupported";
+      return { ok: false, reason: "unsupported" };
+    }
+    if (!isSecureContextOk() && location.protocol !== "file:") {
+      permissionState = "unsupported";
+      return { ok: false, reason: "insecure" };
+    }
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      permissionState = "granted";
+      return { ok: true, stream: mediaStream };
+    } catch (err) {
+      permissionState = "denied";
+      return { ok: false, reason: "denied", error: err };
+    }
+  }
+
+  function stopStream() {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach((t) => t.stop());
+      mediaStream = null;
+    }
+  }
+
+  function pickMimeType() {
+    const candidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/ogg;codecs=opus",
+      "audio/mp4"
+    ];
+    for (const c of candidates) {
+      if (global.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c)) {
+        return c;
+      }
+    }
+    return "";
+  }
+
+  async function startRecording() {
+    chunks = [];
+    if (!mediaStream) {
+      const res = await requestMic();
+      if (!res.ok) return res;
+    }
+    const mime = pickMimeType();
+    const opts = mime ? { mimeType: mime } : undefined;
+    mediaRecorder = new MediaRecorder(mediaStream, opts);
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) chunks.push(e.data);
+    };
+    mediaRecorder.start();
+    return { ok: true };
+  }
+
+  function stopRecording() {
+    return new Promise((resolve) => {
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        resolve({ ok: false, reason: "not-recording" });
+        return;
+      }
+      mediaRecorder.onstop = () => {
+        const type = mediaRecorder.mimeType || "audio/webm";
+        const blob = new Blob(chunks, { type });
+        if (lastBlobUrl) URL.revokeObjectURL(lastBlobUrl);
+        lastBlobUrl = URL.createObjectURL(blob);
+        resolve({ ok: true, blob, url: lastBlobUrl });
+      };
+      mediaRecorder.stop();
+    });
+  }
+
+  /**
+   * Optional rough ASR — English/Icelandic models are NOT historical ON.
+   */
+  function runRoughRecognition(opts) {
+    const Ctor = getSpeechRecognitionCtor();
+    if (!Ctor) {
+      return Promise.resolve({
+        available: false,
+        note: "Web Speech API not available in this browser."
+      });
+    }
+    return new Promise((resolve) => {
+      const rec = new Ctor();
+      rec.lang = opts && opts.lang ? opts.lang : "en-US";
+      rec.interimResults = false;
+      rec.maxAlternatives = 3;
+      let done = false;
+      const finish = (payload) => {
+        if (done) return;
+        done = true;
+        resolve(payload);
+      };
+      rec.onresult = (ev) => {
+        const alts = [];
+        for (let i = 0; i < ev.results[0].length; i++) {
+          alts.push(ev.results[0][i].transcript);
+        }
+        finish({
+          available: true,
+          transcripts: alts,
+          warning:
+            "ROUGH AID ONLY — browser speech recognition is trained on modern languages (often English). It is NOT a historical Old Norse evaluator and must never be treated as ground truth. MODERN ICELANDIC ASR/TTS is also NOT Old Norse."
+        });
+      };
+      rec.onerror = (ev) => {
+        finish({
+          available: true,
+          error: ev.error,
+          warning:
+            "Recognition failed or was blocked. Rely on record + playback + self-rate against historical cues."
+        });
+      };
+      rec.onend = () => {
+        finish({
+          available: true,
+          transcripts: [],
+          warning: "No recognition result. Use self-rating checklist."
+        });
+      };
+      try {
+        rec.start();
+      } catch (e) {
+        finish({ available: false, error: String(e) });
+      }
+    });
+  }
+
+  function getPermissionState() {
+    return permissionState;
+  }
+
+  global.NORDRONA = global.NORDRONA || {};
+  global.NORDRONA.voice = {
+    requestMic,
+    startRecording,
+    stopRecording,
+    stopStream,
+    runRoughRecognition,
+    getPermissionState,
+    isSecureContextOk,
+    getSpeechRecognitionCtor,
+    getLastUrl: () => lastBlobUrl
+  };
+})(window);
+
+
+/* ==== js/tts.js ==== */
+/**
+ * Norðrœna — Text-to-speech / listen mode
+ *
+ * Clear mode (default): speaks English-friendly phonetic cue strings with
+ * clear English voices — pedagogical approximations for intelligibility.
+ * Orthography mode: speaks raw ON letters with a Nordic/Icelandic voice
+ * when available — still a MODERN APPROXIMATION, not historical ON.
+ *
+ * Clear cues are NOT historical Old Norse pronunciation.
+ */
+(function (global) {
+  const RATE_KEY = "nordrona_tts_rate_v1";
+  const MODE_KEY = "nordrona_tts_mode_v1";
+  const VOICE_KEY = "nordrona_tts_voice_v1";
+
+  const MIN_RATE = 0.4;
+  const MAX_RATE = 1.5;
+  const DEFAULT_RATE = 0.68;
+  const SLOW_RATE = 0.45;
+  const DEFAULT_PITCH = 1.05;
+  const DEFAULT_MODE = "clear"; // "clear" | "ortho"
+
+  let lastVoiceInfo = { name: null, lang: null, mode: DEFAULT_MODE };
+
+  function available() {
+    return !!(global.speechSynthesis && global.SpeechSynthesisUtterance);
+  }
+
+  function clampRate(r) {
+    const n = Number(r);
+    if (Number.isNaN(n)) return DEFAULT_RATE;
+    return Math.min(MAX_RATE, Math.max(MIN_RATE, n));
+  }
+
+  function getRate() {
+    try {
+      const v = localStorage.getItem(RATE_KEY);
+      if (v == null) return DEFAULT_RATE;
+      return clampRate(v);
+    } catch (e) {
+      return DEFAULT_RATE;
+    }
+  }
+
+  function setRate(r) {
+    const rate = clampRate(r);
+    try {
+      localStorage.setItem(RATE_KEY, String(rate));
+    } catch (e) {}
+    return rate;
+  }
+
+  function getMode() {
+    try {
+      const m = localStorage.getItem(MODE_KEY);
+      if (m === "ortho" || m === "clear") return m;
+    } catch (e) {}
+    return DEFAULT_MODE;
+  }
+
+  function setMode(m) {
+    const mode = m === "ortho" ? "ortho" : "clear";
+    try {
+      localStorage.setItem(MODE_KEY, mode);
+    } catch (e) {}
+    return mode;
+  }
+
+  function getPreferredVoiceName() {
+    try {
+      return localStorage.getItem(VOICE_KEY) || "";
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function setPreferredVoiceName(name) {
+    try {
+      if (name) localStorage.setItem(VOICE_KEY, String(name));
+      else localStorage.removeItem(VOICE_KEY);
+    } catch (e) {}
+    return name || "";
+  }
+
+  function ensureVoicesLoaded() {
+    return new Promise((resolve) => {
+      if (!available()) {
+        resolve([]);
+        return;
+      }
+      const existing = speechSynthesis.getVoices();
+      if (existing && existing.length) {
+        resolve(existing);
+        return;
+      }
+      const onVoices = () => {
+        speechSynthesis.removeEventListener("voiceschanged", onVoices);
+        resolve(speechSynthesis.getVoices() || []);
+      };
+      speechSynthesis.addEventListener("voiceschanged", onVoices);
+      setTimeout(() => resolve(speechSynthesis.getVoices() || []), 600);
+    });
+  }
+
+  function scoreClearVoice(v) {
+    const name = v.name || "";
+    const lang = (v.lang || "").toLowerCase();
+    let score = 0;
+    // Strong prefer clear English voices
+    if (/google/i.test(name) && /en(-|_|$)/i.test(lang)) score += 100;
+    if (/Samantha/i.test(name)) score += 95;
+    if (/Microsoft\s+(Aria|Zira|David|Guy|Jenny)/i.test(name)) score += 90;
+    if (/Enhanced/i.test(name) && /^en/i.test(lang)) score += 85;
+    if (/Siri|Alex|Daniel|Karen|Moira|Tessa|Fiona|Victoria/i.test(name) && /^en/i.test(lang))
+      score += 80;
+    if (/^en(-us)/i.test(lang)) score += 40;
+    if (/^en(-gb)/i.test(lang)) score += 38;
+    if (/^en/i.test(lang)) score += 30;
+    // Penalize muffled compact / Nordic for Clear mode
+    if (/compact|premium compact/i.test(name)) score -= 50;
+    if (/icelandic|^is(-|$)/i.test(name + " " + lang)) score -= 80;
+    if (/norwegian|swedish|danish|^nb|^nn|^sv|^da/i.test(name + " " + lang)) score -= 20;
+    return score;
+  }
+
+  function scoreOrthoVoice(v) {
+    const name = v.name || "";
+    const lang = (v.lang || "").toLowerCase();
+    let score = 0;
+    if (/^is(-|$)/i.test(lang) || /icelandic/i.test(name)) score += 100;
+    if (/^nb|^nn/i.test(lang) || /norwegian/i.test(name)) score += 70;
+    if (/^sv/i.test(lang) || /swedish/i.test(name)) score += 60;
+    if (/^da/i.test(lang) || /danish/i.test(name)) score += 55;
+    if (/^de/i.test(lang)) score += 30;
+    if (/^en/i.test(lang)) score += 10;
+    if (/compact/i.test(name)) score -= 15;
+    return score;
+  }
+
+  function pickVoice(mode) {
+    if (!available()) return null;
+    const voices = speechSynthesis.getVoices() || [];
+    if (!voices.length) return null;
+    const preferred = getPreferredVoiceName();
+    if (preferred) {
+      const hit = voices.find((v) => v.name === preferred);
+      if (hit) {
+        // Still respect mode preference loosely: if user saved a voice, use it
+        return hit;
+      }
+    }
+    const scorer = mode === "ortho" ? scoreOrthoVoice : scoreClearVoice;
+    let best = null;
+    let bestScore = -Infinity;
+    for (const v of voices) {
+      const s = scorer(v);
+      if (s > bestScore) {
+        bestScore = s;
+        best = v;
+      }
+    }
+    return best || voices[0] || null;
+  }
+
+  /**
+   * Fallback transliterator: ON orthography → English-friendly phonetic cue.
+   * Pedagogical only — NOT historical ON.
+   */
+  function buildClearCue(onText) {
+    if (onText == null) return "";
+    let s = String(onText).trim();
+    if (!s) return "";
+
+    // Single-letter drills
+    const singles = {
+      þ: "th as in thin",
+      Þ: "th as in thin",
+      ð: "th as in this",
+      Ð: "th as in this",
+      ǫ: "aw as in law, short",
+      Ǫ: "aw as in law, short",
+      æ: "ai as in fair, or eh",
+      Æ: "ai as in fair, or eh",
+      œ: "ur as in French peu, rounded",
+      Œ: "ur as in French peu, rounded",
+      á: "aa, long ah",
+      Á: "aa, long ah",
+      a: "ah, short",
+      A: "ah, short",
+      é: "eh, long",
+      É: "eh, long",
+      í: "ee, long",
+      Í: "ee, long",
+      ó: "oh, long",
+      Ó: "oh, long",
+      ú: "oo, long",
+      Ú: "oo, long",
+      ý: "ee, long front",
+      Ý: "ee, long front",
+      ø: "ur rounded",
+      Ø: "ur rounded",
+      ö: "ur rounded short"
+    };
+    if (singles[s] != null && s.length === 1) return singles[s];
+
+    // Contrast pair a — á
+    if (/^a\s*[—–\-]\s*á$/i.test(s) || /^a\s+á$/i.test(s)) {
+      return "ah, short — then aa, long ah (hold longer, no ow diphthong)";
+    }
+
+    // Known multi-char map (case-insensitive keys normalized)
+    const known = {
+      maðr: "MAHTH-r (th as in this)",
+      kona: "KOH-nah",
+      land: "LAHND",
+      vera: "VEH-rah",
+      heita: "HAY-tah",
+      þórr: "THOR (th as in thin, long o)",
+      óðinn: "OH-thin (th as in this)",
+      lǫnd: "LAWND",
+      þing: "THING (th as in thin)",
+      þú: "THOO (th as in thin)"
+    };
+    const key = s.toLowerCase();
+    if (known[key]) return known[key];
+
+    // Generic transliteration
+    let out = "";
+    const chars = Array.from(s);
+    for (let i = 0; i < chars.length; i++) {
+      const c = chars[i];
+      const lower = c.toLowerCase();
+      const map = {
+        þ: "th",
+        ð: "dh",
+        ǫ: "aw",
+        æ: "ai",
+        œ: "ur",
+        á: "aa",
+        é: "eh",
+        í: "ee",
+        ó: "oh",
+        ú: "oo",
+        ý: "ee",
+        ø: "ur",
+        ö: "ur",
+        j: "y",
+        "—": " — ",
+        "–": " — ",
+        "-": "-"
+      };
+      if (map[lower] != null) {
+        const piece = map[lower];
+        // Preserve rough casing for first letter of word
+        out += c === c.toUpperCase() && /[a-z]/i.test(piece) ? piece.toUpperCase() : piece;
+      } else {
+        out += c;
+      }
+    }
+
+    // Heuristic syllable spacing: insert spaces around vowel clusters
+    out = out
+      .replace(/([bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ])([aeiouyAEIOUY])/g, "$1 $2")
+      .replace(/([aeiouyAEIOUY]{1,3})([bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ]{1,2})(?=[aeiouyAEIOUY])/g, "$1$2, ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    // Soften dh → "th(this)" cue hint in parentheses once if present
+    if (/\bdh\b/i.test(out) || /dh/i.test(out)) {
+      out = out.replace(/dh/gi, "th") + " (th as in this)";
+    } else if (/\bth\b/i.test(out) || /^th/i.test(out) || / th/i.test(out)) {
+      // leave; caller may have thorn
+    }
+
+    return out || s;
+  }
+
+  /** Split cue into syllable-ish chunks for slow playback. */
+  function splitSyllables(cue) {
+    const s = String(cue || "").trim();
+    if (!s) return [];
+    // Pull trailing parenthetical gloss into its own final chunk
+    let main = s;
+    let gloss = "";
+    const gm = s.match(/^(.*?)\s*(\([^)]*\))\s*$/);
+    if (gm) {
+      main = gm[1].trim();
+      gloss = gm[2].trim();
+    }
+    let parts = [];
+    if (main) {
+      // Split on commas, em/en dashes, or hyphens between syllable tokens
+      parts = main
+        .split(/\s*[—,;]\s*|\s+-\s+|-(?=[A-Za-zÀ-ÖØ-öø-ÿ])/)
+        .map((p) => p.trim())
+        .filter(Boolean);
+      if (parts.length <= 1 && /\s/.test(main)) {
+        parts = main.split(/\s+/).filter(Boolean);
+      }
+    }
+    if (gloss) parts.push(gloss);
+    return parts.length ? parts : [s];
+  }
+
+  function pause(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  function speakUtterance(text, opts) {
+    opts = opts || {};
+    return new Promise((resolve) => {
+      const u = new SpeechSynthesisUtterance(String(text));
+      u.rate = clampRate(opts.rate != null ? opts.rate : getRate());
+      u.pitch = opts.pitch != null ? opts.pitch : DEFAULT_PITCH;
+      u.volume = opts.volume != null ? opts.volume : 1;
+      const voice = opts.voice || null;
+      if (voice) {
+        u.voice = voice;
+        u.lang = voice.lang || opts.lang || "en-US";
+      } else {
+        u.lang = opts.lang || "en-US";
+      }
+      u.onend = () => resolve({ ok: true });
+      u.onerror = () => resolve({ ok: false, reason: "error" });
+      speechSynthesis.speak(u);
+    });
+  }
+
+  /**
+   * @param {object} opts
+   *   text / onText — raw ON orthography
+   *   clearCue — phonetic cue string (preferred in clear mode)
+   *   mode — "clear" | "ortho" (default getMode())
+   *   rate — override rate
+   *   slow — if true, use SLOW_RATE and syllable-by-syllable in clear mode
+   *   syllables — force syllable-by-syllable
+   */
+  async function speak(textOrOpts, maybeOpts) {
+    let opts;
+    if (textOrOpts && typeof textOrOpts === "object" && !Array.isArray(textOrOpts)) {
+      opts = Object.assign({}, textOrOpts);
+    } else {
+      opts = Object.assign({}, maybeOpts || {}, { text: textOrOpts });
+    }
+
+    if (!available()) {
+      return {
+        ok: false,
+        reason: "unavailable",
+        message:
+          "speechSynthesis is not available in this browser. Use the reconstructed IPA/notes beside each item, or try Chrome/Firefox/Safari on a desktop."
+      };
+    }
+
+    await ensureVoicesLoaded();
+    speechSynthesis.cancel();
+    await pause(80);
+
+    const mode = opts.mode || getMode();
+    const onText = opts.onText != null ? opts.onText : opts.text;
+    let clearCue =
+      opts.clearCue != null && String(opts.clearCue).trim()
+        ? String(opts.clearCue).trim()
+        : buildClearCue(onText);
+
+    const slow = !!opts.slow;
+    const useSyllables = slow || !!opts.syllables;
+    const rate = clampRate(
+      opts.rate != null ? opts.rate : slow ? SLOW_RATE : getRate()
+    );
+
+    const voice = pickVoice(mode);
+    lastVoiceInfo = {
+      name: voice ? voice.name : null,
+      lang: voice ? voice.lang : mode === "clear" ? "en-US" : "is-IS",
+      mode
+    };
+    if (voice && voice.name) setPreferredVoiceName(voice.name);
+
+    const speakText = mode === "ortho" ? String(onText || "") : clearCue;
+    if (!speakText) {
+      return { ok: false, reason: "empty", message: "Nothing to speak." };
+    }
+
+    const disclaimer =
+      "MODERN APPROXIMATION — NOT historical Old Norse speech. Clear cues are English phonetic approximations for ear training; Orthography mode uses modern browser voices on raw letters. Neither is a medieval recording.";
+
+    try {
+      if (mode === "clear" && useSyllables) {
+        const parts = splitSyllables(clearCue);
+        for (let i = 0; i < parts.length; i++) {
+          if (!available()) break;
+          // Cancel-check: if user hit stop, speechSynthesis.pending/speaking may be false after cancel
+          const r = await speakUtterance(parts[i], {
+            rate,
+            pitch: DEFAULT_PITCH,
+            volume: 1,
+            voice,
+            lang: voice ? voice.lang : "en-US"
+          });
+          if (!r.ok) break;
+          if (i < parts.length - 1) await pause(220);
+        }
+      } else {
+        await speakUtterance(speakText, {
+          rate,
+          pitch: DEFAULT_PITCH,
+          volume: 1,
+          voice,
+          lang:
+            voice && voice.lang
+              ? voice.lang
+              : mode === "ortho"
+                ? "is-IS"
+                : "en-US"
+        });
+      }
+
+      if (opts.onend) opts.onend();
+      return {
+        ok: true,
+        rate,
+        mode,
+        voiceName: lastVoiceInfo.name,
+        voiceLang: lastVoiceInfo.lang,
+        spokenText: speakText,
+        disclaimer
+      };
+    } catch (e) {
+      if (opts.onerror) opts.onerror(e);
+      return {
+        ok: false,
+        reason: "error",
+        message: "TTS playback failed. Rely on reconstructed notes."
+      };
+    }
+  }
+
+  function stop() {
+    if (available()) speechSynthesis.cancel();
+  }
+
+  function speakClear(onText, clearCue, opts) {
+    return speak(
+      Object.assign({}, opts || {}, {
+        onText,
+        clearCue,
+        mode: "clear",
+        slow: false
+      })
+    );
+  }
+
+  function speakSlow(onText, clearCue, opts) {
+    return speak(
+      Object.assign({}, opts || {}, {
+        onText,
+        clearCue,
+        mode: "clear",
+        slow: true,
+        syllables: true
+      })
+    );
+  }
+
+  function speakOrtho(onText, opts) {
+    return speak(
+      Object.assign({}, opts || {}, {
+        onText,
+        text: onText,
+        mode: "ortho"
+      })
+    );
+  }
+
+  function getLastVoiceInfo() {
+    return Object.assign({}, lastVoiceInfo);
+  }
+
+  const DISCLAIMER_HTML =
+    '<p class="tts-disclaimer"><strong>MODERN APPROXIMATION — NOT historical Old Norse speech.</strong> Clear playback uses English phonetic cues for intelligibility (not historical ON). Orthography mode reads raw letters with a modern Nordic/English voice. Compare with reconstructed IPA/notes.</p>';
+
+  const CLEAR_NOTE_HTML =
+    '<p class="tts-clear-note muted">Clear playback uses English phonetic cues for intelligibility; compare with reconstructed notes. Cues are pedagogical approximations — not claims of historical Old Norse speech.</p>';
+
+  global.NORDRONA = global.NORDRONA || {};
+  global.NORDRONA.tts = {
+    available,
+    getRate,
+    setRate,
+    clampRate,
+    getMode,
+    setMode,
+    getPreferredVoiceName,
+    setPreferredVoiceName,
+    pickVoice,
+    ensureVoicesLoaded,
+    buildClearCue,
+    splitSyllables,
+    speak,
+    speakClear,
+    speakSlow,
+    speakOrtho,
+    stop,
+    getLastVoiceInfo,
+    DISCLAIMER_HTML,
+    CLEAR_NOTE_HTML,
+    MIN_RATE,
+    MAX_RATE,
+    DEFAULT_RATE,
+    SLOW_RATE,
+    DEFAULT_PITCH,
+    RATE_KEY,
+    MODE_KEY,
+    VOICE_KEY
+  };
+})(window);
+
+
+/* ==== js/review.js ==== */
+/**
+ * Norðrœna — spaced review stub (missed written items)
+ */
+(function (global) {
+  function renderQueue(container) {
+    const P = global.NORDRONA.progress;
+    const queue = P.getReviewQueue();
+    if (!queue.length) {
+      container.innerHTML =
+        '<p class="muted">No missed items yet. Incorrect written answers appear here for later review.</p>';
+      return;
+    }
+    container.innerHTML = queue
+      .map(
+        (q) => `
+      <article class="review-card" data-id="${q.id}">
+        <p class="review-prompt">${q.prompt}</p>
+        <details>
+          <summary>Reveal answer</summary>
+          <p><strong>${escapeHtml(String(q.answer))}</strong></p>
+          <p class="muted">${q.explanation || ""}</p>
+        </details>
+        <button type="button" class="btn ghost review-dismiss" data-id="${q.id}">Mark reviewed</button>
+      </article>`
+      )
+      .join("");
+
+    container.querySelectorAll(".review-dismiss").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        P.removeFromReview(btn.getAttribute("data-id"));
+        renderQueue(container);
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  global.NORDRONA = global.NORDRONA || {};
+  global.NORDRONA.review = { renderQueue };
+})(window);
+
+
+/* ==== js/session.js ==== */
+/**
+ * Norðrœna — path session runner
+ * One exercise at a time · progress bar · check · hearts · celebration
+ */
+(function (global) {
+  const N = () => global.NORDRONA;
+
+  let session = null;
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function labelClass(label) {
+    const L = String(label || "").toUpperCase();
+    if (L === "ATTESTED") return "attested";
+    if (L === "NORMALIZED") return "normalized";
+    if (L === "RECONSTRUCTED") return "reconstructed";
+    return "uncertain";
+  }
+
+  function start(levelId) {
+    const found = N().path.findLevel(levelId);
+    if (!found || !found.level.exercises || !found.level.exercises.length) {
+      return { ok: false, reason: "missing" };
+    }
+    if (!N().progress.isLevelUnlocked(levelId)) {
+      return { ok: false, reason: "locked" };
+    }
+    const heartsMax = N().path.heartsMax || 5;
+    session = {
+      levelId,
+      level: found.level,
+      unit: found.unit,
+      section: found.section,
+      exercises: found.level.exercises.slice(),
+      index: 0,
+      hearts: heartsMax,
+      heartsMax,
+      mistakes: 0,
+      checked: false,
+      lastCorrect: null,
+      finished: false,
+      skipIntro: false
+    };
+    N().progress.touchStreak();
+    return { ok: true, session };
+  }
+
+  function getSession() {
+    return session;
+  }
+
+  function currentExercise() {
+    if (!session || session.finished) return null;
+    // optional intro card as index -1 conceptually: handled by app via intro flag
+    return session.exercises[session.index] || null;
+  }
+
+  function progressFraction() {
+    if (!session) return 0;
+    return session.exercises.length
+      ? session.index / session.exercises.length
+      : 0;
+  }
+
+  function ttsMini(form, clearSpeak) {
+    const T = N().tts;
+    if (!T || !T.available()) {
+      return `<p class="muted">TTS unavailable — use clear cue: <code>${escapeHtml(clearSpeak || form)}</code></p>`;
+    }
+    const clear = clearSpeak || (T.buildClearCue && T.buildClearCue(form)) || form;
+    return `
+      <div class="tts-box compact" data-speak-text="${escapeHtml(form)}" data-speak-clear="${escapeHtml(clear)}">
+        ${T.DISCLAIMER_HTML || '<p class="tts-disclaimer">MODERN APPROXIMATION — NOT historical Old Norse speech</p>'}
+        <p class="tts-cue muted"><strong>Clear cue:</strong> <code>${escapeHtml(clear)}</code></p>
+        <div class="tts-actions">
+          <button type="button" class="btn play tts-play-clear">▶ Play clear</button>
+          <button type="button" class="btn ghost tts-slow">Play slow</button>
+          <button type="button" class="btn ghost tts-ortho">Orthography</button>
+          <button type="button" class="btn ghost tts-stop">Stop</button>
+        </div>
+      </div>`;
+  }
+
+  function renderExerciseHtml(ex) {
+    if (!ex) return "";
+    const type = ex.type;
+
+    if (type === "lore") {
+      return `
+        <div class="sess-ex" data-type="lore">
+          <h2>${escapeHtml(ex.title || "Reading")}</h2>
+          <div class="lore-body">${ex.html || ""}</div>
+          <p class="muted">Tap Continue when you have read this.</p>
+        </div>`;
+    }
+
+    if (type === "speak") {
+      const cues = (ex.historicalCues || [])
+        .map(
+          (c, i) =>
+            `<label class="check-item"><input type="checkbox" class="self-rate" data-cue="${i}" /><span>${escapeHtml(c)}</span></label>`
+        )
+        .join("");
+      const tips = (ex.rubricTips || []).map((t) => `<li>${escapeHtml(t)}</li>`).join("");
+      return `
+        <div class="sess-ex speak-block" data-type="speak" data-ex="${escapeHtml(ex.id)}">
+          <p class="sess-prompt">${ex.prompt || "Say:"}</p>
+          <p class="speak-target"><span class="lemma">${escapeHtml(ex.target)}</span>
+            <span class="label ${labelClass(ex.label)}">${escapeHtml(ex.label || "NORMALIZED")}</span></p>
+          <p class="gloss">${escapeHtml(ex.gloss || "")}</p>
+          ${ex.clearSpeak ? `<p class="tts-cue muted"><strong>Clear speak:</strong> <code>${escapeHtml(ex.clearSpeak)}</code></p>` : ""}
+          ${ex.reconstructedNotes ? `<div class="recon-notes callout info"><strong>Reconstructed notes</strong><p>${escapeHtml(ex.reconstructedNotes)}</p></div>` : ""}
+          ${ttsMini(ex.target, ex.clearSpeak)}
+          <div class="mic-panel" data-ex="${escapeHtml(ex.id)}">
+            <p class="mic-explain">Record → playback → self-rate. Nothing is uploaded. ASR is never historical ground truth.</p>
+            <div class="mic-status muted" data-role="status">Mic: not requested yet</div>
+            <div class="mic-actions">
+              <button type="button" class="btn primary mic-enable">Enable microphone</button>
+              <button type="button" class="btn record-btn" disabled>Record</button>
+              <button type="button" class="btn ghost playback-btn" disabled>Play my recording</button>
+            </div>
+            <div class="mic-denied callout warn" hidden>
+              <strong>Microphone permission denied</strong>
+              <p>Allow mic for this site, prefer localhost/HTTPS.</p>
+            </div>
+            <audio class="playback" controls hidden></audio>
+          </div>
+          <div class="self-rate-box">
+            <h4>Self-rate</h4>
+            ${cues}
+            <ul class="rubric">${tips}</ul>
+          </div>
+        </div>`;
+    }
+
+    if (type === "tap_hear" || type === "listen_choice") {
+      return `
+        <div class="sess-ex" data-type="${type}">
+          <p class="sess-prompt">${ex.prompt || "Tap what you hear"}</p>
+          ${ttsMini(ex.audioForm, ex.clearSpeak)}
+          <div class="choices big">
+            ${(ex.choices || [])
+              .map(
+                (c) =>
+                  `<button type="button" class="choice-btn" data-val="${escapeHtml(c.id)}">${c.text}</button>`
+              )
+              .join("")}
+          </div>
+        </div>`;
+    }
+
+    if (type === "multiple" || type === "truefalse" || type === "translate_on_en" || type === "matching-note") {
+      return `
+        <div class="sess-ex" data-type="${type}">
+          <p class="sess-prompt">${ex.prompt}</p>
+          <div class="choices big">
+            ${(ex.choices || [])
+              .map(
+                (c) =>
+                  `<button type="button" class="choice-btn" data-val="${escapeHtml(c.id)}">${c.text}</button>`
+              )
+              .join("")}
+          </div>
+        </div>`;
+    }
+
+    if (type === "text" || (type === "fill" && !ex.choices)) {
+      return `
+        <div class="sess-ex" data-type="${type}">
+          <p class="sess-prompt">${ex.prompt}</p>
+          <input type="text" class="text-answer sess-text" autocomplete="off" spellcheck="false" placeholder="Type answer…" />
+        </div>`;
+    }
+
+    if (type === "fill" && ex.choices) {
+      return `
+        <div class="sess-ex" data-type="fill">
+          <p class="sess-prompt">${ex.prompt}</p>
+          <div class="choices big">
+            ${(ex.choices || [])
+              .map(
+                (c) =>
+                  `<button type="button" class="choice-btn" data-val="${escapeHtml(c.id)}" data-text="${escapeHtml(c.text)}">${c.text}</button>`
+              )
+              .join("")}
+          </div>
+        </div>`;
+    }
+
+    if (type === "tiles") {
+      return `
+        <div class="sess-ex" data-type="tiles">
+          <p class="sess-prompt">${escapeHtml(ex.prompt)}</p>
+          <div class="tile-answer muted" data-role="tile-out">(tap a tile)</div>
+          <div class="tile-bank">
+            ${(ex.tiles || [])
+              .map(
+                (t) =>
+                  `<button type="button" class="tile-btn" data-val="${escapeHtml(t)}">${escapeHtml(t)}</button>`
+              )
+              .join("")}
+          </div>
+        </div>`;
+    }
+
+    if (type === "match") {
+      const rights = (ex.pairs || []).map((p) => p.right);
+      // shuffle copy
+      const shuffled = rights.slice().sort(() => Math.random() - 0.5);
+      return `
+        <div class="sess-ex" data-type="match">
+          <p class="sess-prompt">${escapeHtml(ex.prompt || "Match pairs")}</p>
+          <div class="match-grid">
+            ${(ex.pairs || [])
+              .map(
+                (p, i) => `
+              <div class="match-row" data-left="${escapeHtml(p.left)}">
+                <span class="match-left">${escapeHtml(p.left)}</span>
+                <select class="match-select">
+                  <option value="">—</option>
+                  ${shuffled
+                    .map((r) => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`)
+                    .join("")}
+                </select>
+              </div>`
+              )
+              .join("")}
+          </div>
+        </div>`;
+    }
+
+    return `<div class="sess-ex"><p>Unsupported type: ${escapeHtml(type)}</p></div>`;
+  }
+
+  function collectAnswer(root, ex) {
+    if (!ex) return null;
+    const type = ex.type;
+    if (type === "lore" || type === "speak") return "__continue__";
+    if (type === "tiles") {
+      const out = root.querySelector("[data-role='tile-out']");
+      const v = out && out.getAttribute("data-val");
+      return v || "";
+    }
+    if (type === "match") {
+      const map = {};
+      root.querySelectorAll(".match-row").forEach((row) => {
+        const left = row.getAttribute("data-left");
+        const sel = row.querySelector("select");
+        map[left] = sel ? sel.value : "";
+      });
+      return map;
+    }
+    if (type === "text" || (type === "fill" && !ex.choices)) {
+      const inp = root.querySelector(".sess-text");
+      return inp ? inp.value : "";
+    }
+    const selected = root.querySelector(".choice-btn.selected");
+    if (!selected) return null;
+    if (type === "fill" && ex.choices) {
+      return selected.getAttribute("data-val");
+    }
+    return selected.getAttribute("data-val");
+  }
+
+  function check(root) {
+    if (!session || session.finished) return { ok: false };
+    const ex = currentExercise();
+    if (!ex) return { ok: false };
+
+    if (ex.type === "lore") {
+      session.checked = true;
+      session.lastCorrect = true;
+      return { ok: true, correct: true, explanation: "", auto: true };
+    }
+
+    if (ex.type === "speak") {
+      // require at least one self-rate OR allow continue after viewing
+      const checks = root.querySelectorAll(".self-rate:checked");
+      const had = checks.length > 0;
+      N().progress.markVoice(ex.id, {
+        selfRatings: {},
+        hadRecording: !!(N().voice && N().voice.getLastUrl && N().voice.getLastUrl()),
+        checklistSubmitted: had || true
+      });
+      session.checked = true;
+      session.lastCorrect = true;
+      return { ok: true, correct: true, explanation: "Self-rate saved. Continue.", speak: true };
+    }
+
+    const answer = collectAnswer(root, ex);
+    if (answer == null || answer === "") {
+      return { ok: false, reason: "empty" };
+    }
+
+    const result = N().exercises.gradeWritten(ex, answer);
+    session.checked = true;
+    session.lastCorrect = !!result.correct;
+
+    if (!result.correct) {
+      session.mistakes += 1;
+      session.hearts = Math.max(0, session.hearts - 1);
+      N().progress.addToReview({
+        id: ex.id,
+        levelId: session.levelId,
+        prompt: ex.prompt,
+        answer: result.expected,
+        explanation: result.explanation
+      });
+    }
+
+    return {
+      ok: true,
+      correct: result.correct,
+      explanation: result.explanation,
+      hint: result.hint,
+      expected: result.expected,
+      hearts: session.hearts,
+      dead: session.hearts <= 0
+    };
+  }
+
+  function advance() {
+    if (!session) return { done: true };
+    if (session.hearts <= 0) {
+      session.finished = true;
+      return { done: true, failed: true, mistakes: session.mistakes };
+    }
+    session.index += 1;
+    session.checked = false;
+    session.lastCorrect = null;
+    if (session.index >= session.exercises.length) {
+      session.finished = true;
+      const perfect = session.mistakes === 0;
+      N().progress.completeLevel(session.levelId, {
+        perfect,
+        mistakes: session.mistakes
+      });
+      return {
+        done: true,
+        perfect,
+        mistakes: session.mistakes,
+        xp: perfect ? N().path.xpPerPerfect || 15 : N().path.xpPerLevel || 10,
+        nextId: N().progress.getContinueLevelId()
+      };
+    }
+    return { done: false, index: session.index };
+  }
+
+  function abandon() {
+    session = null;
+  }
+
+  function renderShell(showIntro) {
+    if (!session) return "";
+    const lv = session.level;
+    const frac = progressFraction();
+    const pct = Math.round(frac * 100);
+    const hearts = "♥".repeat(session.hearts) + "♡".repeat(Math.max(0, session.heartsMax - session.hearts));
+
+    if (showIntro && lv.intro && session.index === 0 && !session.skipIntro && !session._introDone) {
+      return `
+        <div class="session-view">
+          <div class="sess-top">
+            <button type="button" class="btn ghost sess-quit" title="Quit">✕</button>
+            <div class="sess-bar"><div class="sess-bar-fill" style="width:${pct}%"></div></div>
+            <div class="sess-hearts" title="Mistake budget">${hearts}</div>
+          </div>
+          <div class="sess-body intro-card">
+            <p class="eyebrow">${escapeHtml(lv.type)} · ${escapeHtml(session.unit.title)}</p>
+            <h1>${escapeHtml(lv.intro.title || lv.title)}</h1>
+            <div class="intro-html">${lv.intro.html || ""}</div>
+            <button type="button" class="btn primary sess-start-ex">Start exercises</button>
+          </div>
+        </div>`;
+    }
+
+    if (session.finished) {
+      return ""; // app shows celebration
+    }
+
+    const ex = currentExercise();
+    return `
+      <div class="session-view">
+        <div class="sess-top">
+          <button type="button" class="btn ghost sess-quit" title="Quit">✕</button>
+          <div class="sess-bar"><div class="sess-bar-fill" style="width:${pct}%"></div></div>
+          <div class="sess-hearts" title="Mistake budget">${hearts}</div>
+        </div>
+        <div class="sess-body" id="sess-exercise">
+          ${renderExerciseHtml(ex)}
+        </div>
+        <div class="sess-feedback" id="sess-feedback" hidden></div>
+        <div class="sess-footer">
+          <button type="button" class="btn primary sess-check" id="sess-check">Check</button>
+          <button type="button" class="btn primary sess-continue" id="sess-continue" hidden>Continue</button>
+        </div>
+      </div>`;
+  }
+
+  function markIntroDone() {
+    if (session) session._introDone = true;
+  }
+
+  global.NORDRONA = global.NORDRONA || {};
+  global.NORDRONA.session = {
+    start,
+    getSession,
+    currentExercise,
+    progressFraction,
+    renderShell,
+    renderExerciseHtml,
+    collectAnswer,
+    check,
+    advance,
+    abandon,
+    markIntroDone,
+    ttsMini,
+    escapeHtml,
+    labelClass
+  };
+})(window);
+
+
+/* ==== js/app.js ==== */
+/**
+ * Norðrœna — path SPA (Duolingo-style pedagogy, scholarly ON content)
+ */
+(function () {
+  const $ = (sel, el) => (el || document).querySelector(sel);
+  const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
+
+  const state = {
+    view: "home",
+    levelId: null,
+    sessionActive: false,
+    showIntro: true,
+    celebrate: null,
+    failed: null
+  };
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function labelClass(label) {
+    const L = String(label || "").toUpperCase();
+    if (L === "ATTESTED") return "attested";
+    if (L === "NORMALIZED") return "normalized";
+    if (L === "RECONSTRUCTED") return "reconstructed";
+    return "uncertain";
+  }
+
+  function navigate(view, levelId) {
+    state.view = view;
+    state.levelId = levelId || null;
+    if (view !== "session") {
+      state.sessionActive = false;
+      state.celebrate = null;
+      state.failed = null;
+    }
+    const hash = levelId ? `#/${view}/${levelId}` : `#/${view}`;
+    if (location.hash !== hash) location.hash = hash;
+    else render();
+  }
+
+  function parseHash() {
+    const h = (location.hash || "#/home").replace(/^#\/?/, "");
+    const parts = h.split("/");
+    state.view = parts[0] || "home";
+    state.levelId = parts[1] || null;
+  }
+
+  function bindTts(root) {
+    const T = NORDRONA.tts;
+    if (!T) return;
+    $$(".tts-box", root).forEach((box) => {
+      const text = box.getAttribute("data-speak-text");
+      const clear = box.getAttribute("data-speak-clear") || "";
+      const playClear = $(".tts-play-clear", box);
+      if (playClear) {
+        playClear.addEventListener("click", async () => {
+          T.setMode("clear");
+          await T.speakClear(text, clear);
+        });
+      }
+      const slow = $(".tts-slow", box);
+      if (slow) {
+        slow.addEventListener("click", async () => {
+          T.setMode("clear");
+          await T.speakSlow(text, clear);
+        });
+      }
+      const ortho = $(".tts-ortho", box);
+      if (ortho) {
+        ortho.addEventListener("click", async () => {
+          T.setMode("ortho");
+          await T.speakOrtho(text);
+        });
+      }
+      const stop = $(".tts-stop", box);
+      if (stop) stop.addEventListener("click", () => T.stop());
+    });
+  }
+
+  function bindMic(root) {
+    const V = NORDRONA.voice;
+    if (!V) return;
+    $$(".mic-panel", root).forEach((panel) => {
+      const status = $('[data-role="status"]', panel);
+      const denied = $(".mic-denied", panel);
+      const enable = $(".mic-enable", panel);
+      const record = $(".record-btn", panel);
+      const playback = $(".playback-btn", panel);
+      const audio = $(".playback", panel);
+      let recording = false;
+
+      if (enable) {
+        enable.addEventListener("click", async () => {
+          const res = await V.requestMic();
+          if (res.ok) {
+            if (status) status.textContent = "Mic: ready";
+            if (record) record.disabled = false;
+            if (denied) denied.hidden = true;
+          } else {
+            if (status) status.textContent = "Mic: " + (res.reason || "denied");
+            if (denied) denied.hidden = false;
+          }
+        });
+      }
+      if (record) {
+        record.addEventListener("click", async () => {
+          if (!recording) {
+            const res = await V.startRecording();
+            if (!res.ok) {
+              if (status) status.textContent = "Mic: " + (res.reason || "error");
+              return;
+            }
+            recording = true;
+            record.classList.add("recording");
+            record.textContent = "Stop";
+            if (status) status.textContent = "Recording…";
+          } else {
+            const res = await V.stopRecording();
+            recording = false;
+            record.classList.remove("recording");
+            record.textContent = "Record";
+            if (res.ok && audio) {
+              audio.src = res.url;
+              audio.hidden = false;
+              if (playback) playback.disabled = false;
+              if (status) status.textContent = "Recorded — play back & self-rate";
+            }
+          }
+        });
+      }
+      if (playback) {
+        playback.addEventListener("click", () => {
+          if (audio && audio.src) audio.play();
+        });
+      }
+    });
+  }
+
+  function typeIcon(type) {
+    const map = {
+      learn: "◆",
+      practice: "↻",
+      speak: "◈",
+      listen: "◎",
+      checkpoint: "★",
+      lore: "❧",
+      notes: "§"
+    };
+    return map[type] || "●";
+  }
+
+  function renderHeader() {
+    const stats = NORDRONA.progress.getStats();
+    return `
+      <header class="site-header path-header">
+        <a href="#/home" class="brand" data-nav="home">
+          <span class="brand-mark">ᚾ</span>
+          <span class="brand-text">
+            <strong>Norðrœna</strong>
+            <small>Old Norse Path</small>
+          </span>
+        </a>
+        <div class="stat-pills">
+          <span class="pill streak" title="Day streak">🔥 ${stats.streak}</span>
+          <span class="pill xp" title="Experience">✦ ${stats.xp} XP</span>
+        </div>
+        <nav class="nav">
+          <a href="#/home" data-nav="home">Path</a>
+          <a href="#/lesson/1" data-nav="lesson">Lesson 1</a>
+          <a href="#/charter" data-nav="charter">Charter</a>
+          <a href="#/futhark" data-nav="futhark">Futhark</a>
+          <a href="#/review" data-nav="review">Review</a>
+        </nav>
+      </header>`;
+  }
+
+  function renderPathHome() {
+    const path = NORDRONA.path;
+    const P = NORDRONA.progress;
+    const stats = P.getStats();
+    const continueId = P.getContinueLevelId();
+    const continueFound = continueId ? path.findLevel(continueId) : null;
+
+    let pathHtml = "";
+    path.sections.forEach((sec, si) => {
+      const lockedSec = sec.comingSoon || !sec.unlocked;
+      pathHtml += `
+        <section class="path-section ${lockedSec ? "coming-soon" : ""}" id="sec-${escapeHtml(sec.id)}">
+          <header class="path-section-head">
+            <p class="eyebrow">Section ${si + 1}</p>
+            <h2>${escapeHtml(sec.title)}</h2>
+            <p class="muted">${escapeHtml(sec.subtitle || "")}</p>
+            ${lockedSec ? '<span class="chip lock">Coming soon</span>' : ""}
+          </header>`;
+
+      (sec.units || []).forEach((unit, ui) => {
+        pathHtml += `
+          <div class="path-unit ${unit.comingSoon ? "coming-soon" : ""}">
+            <div class="unit-banner">
+              <strong>Unit ${ui + 1}</strong>
+              <span>${escapeHtml(unit.title)}</span>
+              ${unit.comingSoon ? '<em class="muted"> — locked</em>' : ""}
+              ${
+                unit.studyNotes && !unit.comingSoon
+                  ? `<a class="btn small ghost unit-notes-btn" href="#/notes/${escapeHtml(unit.id)}">Full notes</a>`
+                  : ""
+              }
+            </div>
+            <div class="path-track">`;
+
+        (unit.levels || []).forEach((lv, li) => {
+          const done = P.isLevelComplete(lv.id);
+          const unlocked = !lv.lockedShell && !sec.comingSoon && P.isLevelUnlocked(lv.id);
+          const isCurrent = continueId === lv.id && !lv.notesOnly && lv.type !== "notes";
+          const zigzag = li % 2 === 0 ? "left" : "right";
+          let cls = `path-node type-${lv.type} ${zigzag}`;
+          if (done) cls += " done";
+          if (!unlocked || lv.lockedShell) cls += " locked";
+          if (isCurrent && unlocked) cls += " current";
+
+          let href = "#";
+          if (unlocked && !lv.lockedShell) {
+            if (lv.notesOnly || lv.type === "notes" || lv.route) {
+              href = lv.route || `#/notes/${unit.id}`;
+            } else {
+              href = `#/session/${lv.id}`;
+            }
+          }
+          const label = lv.lockedShell ? "Coming soon" : lv.title;
+
+          pathHtml += `
+            <div class="path-node-wrap ${zigzag}">
+              ${li > 0 ? '<div class="path-connector" aria-hidden="true"></div>' : ""}
+              <a class="${cls}" href="${href}" data-level="${escapeHtml(lv.id)}"
+                 title="${escapeHtml(label)}" ${!unlocked || lv.lockedShell ? 'aria-disabled="true"' : ""}>
+                <span class="node-icon">${lv.icon && lv.icon.length <= 2 ? escapeHtml(lv.icon) : typeIcon(lv.type)}</span>
+                <span class="node-type">${escapeHtml(lv.type)}</span>
+                <span class="node-title">${escapeHtml(label)}</span>
+                ${done ? '<span class="node-check">✓</span>' : ""}
+                ${isCurrent && unlocked ? '<span class="node-cta">Start</span>' : ""}
+              </a>
+            </div>`;
+        });
+
+        pathHtml += `</div></div>`;
+      });
+
+      pathHtml += `</section>`;
+    });
+
+    // Side path
+    const side = (path.sidePaths || [])
+      .map(
+        (sp) => `
+      <a class="side-path-card" href="${escapeHtml(sp.route)}">
+        <span class="side-glyph">ᚦ</span>
+        <div>
+          <strong>${escapeHtml(sp.title)}</strong>
+          <p class="muted">${escapeHtml(sp.subtitle)}</p>
+          <p class="muted small">${escapeHtml(sp.note || "")}</p>
+        </div>
+      </a>`
+      )
+      .join("");
+
+    return `
+      <section class="path-home">
+        <div class="path-hero">
+          <p class="eyebrow">Historical Old West Norse</p>
+          <h1>${escapeHtml(path.title)}</h1>
+          <p class="lede">A winding path through Classical <em>normalized</em> Old Norse — sounds, first words, and philological honesty. Not Modern Icelandic. Not a green-owl clone.</p>
+          <div class="hero-actions">
+            ${
+              continueFound
+                ? `<a class="btn primary continue-cta" href="#/session/${escapeHtml(continueId)}">Continue · ${escapeHtml(continueFound.level.title)}</a>`
+                : `<span class="btn primary" disabled>Path complete (Section 1)</span>`
+            }
+            <a class="btn ghost" href="#/charter">Charter</a>
+            <a class="btn ghost" href="#/lesson/1">Classic Lesson 1</a>
+          </div>
+          <p class="progress-line">✦ ${stats.xp} XP · 🔥 ${stats.streak}-day streak · ${stats.completedCount} levels done</p>
+        </div>
+        ${pathHtml}
+        <section class="side-paths">
+          <h2>Side paths &amp; full notes</h2>
+          ${side}
+        </section>
+        <p class="center"><button type="button" class="btn ghost" id="reset-progress">Reset all progress</button></p>
+      </section>`;
+  }
+
+
+  function labelClassHtml(label) {
+    return `<span class="label ${labelClass(label)}">${escapeHtml(label)}</span>`;
+  }
+
+  function renderVocabCard(v) {
+    if (!v) return "";
+    const compare = v.compare
+      ? `<aside class="callout warn tight"><strong>${escapeHtml(v.compare.label)}</strong><p>${escapeHtml(v.compare.text)}</p></aside>`
+      : "";
+    const tts =
+      NORDRONA.session && NORDRONA.session.ttsMini
+        ? NORDRONA.session.ttsMini(v.form, v.clearSpeak)
+        : v.clearSpeak
+          ? `<p class="tts-cue muted"><strong>Clear cue:</strong> <code>${escapeHtml(v.clearSpeak)}</code></p>`
+          : "";
+    return `
+      <article class="vocab-card">
+        <header>
+          <span class="lemma">${escapeHtml(v.form)}</span>
+          ${labelClassHtml(v.label || "ATTESTED")}
+        </header>
+        <p class="gloss">${escapeHtml(v.gloss || "")}</p>
+        <p class="pos muted">${escapeHtml(v.pos || "")}</p>
+        ${v.labelNote ? `<p class="label-note muted"><em>Label note:</em> ${escapeHtml(v.labelNote)}</p>` : ""}
+        ${v.grammar ? `<p class="grammar">${escapeHtml(v.grammar)}</p>` : ""}
+        ${tts}
+        ${compare}
+      </article>`;
+  }
+
+  function renderLessonSections(lesson, sectionIds) {
+    if (!lesson || !lesson.sections) return "<p>No sections.</p>";
+    const wanted = sectionIds && sectionIds.length ? new Set(sectionIds) : null;
+    return lesson.sections
+      .filter((s) => !wanted || wanted.has(s.id))
+      .map((sec) => {
+        let body = sec.html || "";
+        let vocab = "";
+        if (sec.vocab && sec.vocab.length) {
+          vocab = `<div class="vocab-grid">${sec.vocab.map(renderVocabCard).join("")}</div>`;
+        }
+        return `
+          <section class="lesson-section" id="sec-${escapeHtml(sec.id)}">
+            <h2>${escapeHtml(sec.title)}</h2>
+            <div class="section-html">${body}</div>
+            ${vocab}
+          </section>`;
+      })
+      .join("");
+  }
+
+  function renderClassicExercises(lesson) {
+    const written = (lesson.exercises || []).filter((e) => e.type !== "speak");
+    const speak = (lesson.exercises || []).filter((e) => e.type === "speak");
+    const S = NORDRONA.session;
+    let html = "";
+    if (written.length) {
+      html += `<section class="exercises-section panel"><h2>Written exercises (Lesson 1)</h2>`;
+      written.forEach((ex) => {
+        if (ex.type === "multiple" || ex.type === "matching-note") {
+          html += `
+            <fieldset class="ex-block" data-ex="${escapeHtml(ex.id)}">
+              <legend>${ex.prompt}</legend>
+              <div class="choices">
+                ${(ex.choices || [])
+                  .map(
+                    (c) =>
+                      `<label class="choice"><input type="radio" name="${escapeHtml(ex.id)}" value="${escapeHtml(c.id)}" /><span>${c.text}</span></label>`
+                  )
+                  .join("")}
+              </div>
+              <div class="ex-actions"><button type="button" class="btn primary classic-check" data-ex="${escapeHtml(ex.id)}">Check</button></div>
+              <div class="ex-feedback" hidden></div>
+            </fieldset>`;
+        } else if (ex.type === "text") {
+          html += `
+            <fieldset class="ex-block" data-ex="${escapeHtml(ex.id)}">
+              <legend>${ex.prompt}</legend>
+              <input type="text" class="text-answer classic-text" data-ex="${escapeHtml(ex.id)}" autocomplete="off" spellcheck="false" />
+              <div class="ex-actions"><button type="button" class="btn primary classic-check" data-ex="${escapeHtml(ex.id)}">Check</button></div>
+              <div class="ex-feedback" hidden></div>
+            </fieldset>`;
+        }
+      });
+      html += `</section>`;
+    }
+    if (speak.length) {
+      html += `<section class="exercises-section panel"><h2>Speak drills (Lesson 1)</h2>
+        <p class="muted">Full clearSpeak + reconstructedNotes from lesson1.js. Mic + self-rate; TTS clear / slow / orthography.</p>`;
+      speak.forEach((ex) => {
+        const cues = (ex.historicalCues || [])
+          .map((c) => `<label class="check-item"><input type="checkbox" /><span>${escapeHtml(c)}</span></label>`)
+          .join("");
+        const tips = (ex.rubricTips || []).map((x) => `<li>${escapeHtml(x)}</li>`).join("");
+        html += `
+          <div class="speak-block panel" data-ex="${escapeHtml(ex.id)}">
+            <p class="sess-prompt">${ex.prompt || "Say:"}</p>
+            <p class="speak-target"><span class="lemma">${escapeHtml(ex.target)}</span> ${labelClassHtml(ex.label || "NORMALIZED")}</p>
+            <p class="gloss">${escapeHtml(ex.gloss || "")}</p>
+            ${ex.clearSpeak ? `<p class="tts-cue muted"><strong>Clear speak:</strong> <code>${escapeHtml(ex.clearSpeak)}</code></p>` : ""}
+            ${ex.reconstructedNotes ? `<div class="recon-notes callout info"><strong>Reconstructed notes</strong><p>${escapeHtml(ex.reconstructedNotes)}</p></div>` : ""}
+            ${S && S.ttsMini ? S.ttsMini(ex.target, ex.clearSpeak) : ""}
+            <div class="mic-panel" data-ex="${escapeHtml(ex.id)}">
+              <p class="mic-explain">Record → playback → self-rate. Nothing is uploaded. ASR is never historical ground truth.</p>
+              <div class="mic-status muted" data-role="status">Mic: not requested yet</div>
+              <div class="mic-actions">
+                <button type="button" class="btn primary mic-enable">Enable microphone</button>
+                <button type="button" class="btn record-btn" disabled>Record</button>
+                <button type="button" class="btn ghost playback-btn" disabled>Play my recording</button>
+              </div>
+              <div class="mic-denied callout warn" hidden>
+                <strong>Microphone permission denied</strong>
+                <p>Allow mic for this site, prefer localhost/HTTPS.</p>
+              </div>
+              <audio class="playback" controls hidden></audio>
+            </div>
+            <div class="self-rate-box">
+              <h4>Self-rate</h4>
+              ${cues}
+              <ul class="rubric">${tips}</ul>
+            </div>
+          </div>`;
+      });
+      html += `</section>`;
+    }
+    return html;
+  }
+
+  function renderStudyNotes() {
+    const unitId = state.levelId;
+    const path = NORDRONA.path;
+    let unit = null;
+    (path.sections || []).forEach((sec) => {
+      (sec.units || []).forEach((u) => {
+        if (u.id === unitId) unit = u;
+      });
+    });
+    if (!unit || !unit.studyNotes) {
+      return `
+        <section class="panel">
+          <h1>Study notes</h1>
+          <p>No study notes for this unit.</p>
+          <a class="btn" href="#/home">Back to path</a>
+        </section>`;
+    }
+    const sn = unit.studyNotes;
+    const lesson = NORDRONA.lessons && NORDRONA.lessons[sn.lessonId];
+    return `
+      <article class="prose study-notes-view">
+        <p class="eyebrow">Reference · Deep dive</p>
+        <h1>${escapeHtml(sn.title || unit.title + " — Study notes")}</h1>
+        <p class="lede">Full scholarly prose from <code>lesson${sn.lessonId}.js</code> — not shortened. Path micro-lessons remain available on the map.</p>
+        <p class="hero-actions">
+          <a class="btn ghost" href="#/home">← Path</a>
+          <a class="btn" href="#/lesson/1">Classic Lesson 1 (full)</a>
+        </p>
+        ${renderLessonSections(lesson, sn.sectionIds)}
+        <p class="lesson-foot">
+          <a class="btn primary" href="#/home">Back to path</a>
+          <a class="btn" href="#/lesson/1">Open full Classic Lesson 1</a>
+        </p>
+      </article>`;
+  }
+
+  function renderClassicLesson() {
+    const lesson = NORDRONA.lessons && NORDRONA.lessons[1];
+    if (!lesson) {
+      return `<section class="panel"><h1>Lesson 1 missing</h1><a class="btn" href="#/home">Path</a></section>`;
+    }
+    return `
+      <article class="prose classic-lesson-view">
+        <p class="eyebrow">Classic Lesson 1 · full scholarly view</p>
+        <h1>${escapeHtml(lesson.title)}</h1>
+        <p class="lede">${escapeHtml(lesson.subtitle || "")}</p>
+        <aside class="callout info">
+          <strong>Path + full notes</strong>
+          <p>This screen renders <em>all</em> sections, vocabulary fields (gloss, pos, label, labelNote, grammar), written exercises, and speak drills from <code>data/lesson1.js</code> verbatim. The Duolingo-style path remains the primary practice UX.</p>
+        </aside>
+        <p class="hero-actions">
+          <a class="btn ghost" href="#/home">← Path</a>
+          <a class="btn" href="#/notes/u1">Unit 1 notes</a>
+          <a class="btn" href="#/notes/u2">Unit 2 notes</a>
+          <a class="btn" href="#/notes/u3">Unit 3 notes</a>
+        </p>
+        ${renderLessonSections(lesson, null)}
+        ${renderClassicExercises(lesson)}
+        <p class="lesson-foot">
+          <a class="btn primary" href="#/home">Back to path</a>
+          <a class="btn" href="#/charter">Charter</a>
+          <a class="btn" href="#/futhark">Elder Futhark</a>
+        </p>
+      </article>`;
+  }
+
+
+  function renderCharter() {
+    const ch = NORDRONA.course.charter;
+    return `
+      <article class="prose charter">
+        <h1>Course charter</h1>
+        <section>
+          <h2>Target language</h2>
+          <p><strong>${escapeHtml(ch.targetLanguage.name)}</strong> — ${escapeHtml(ch.targetLanguage.period)}</p>
+          <p>${escapeHtml(ch.targetLanguage.description)}</p>
+        </section>
+        <aside class="callout warn">
+          <strong>${escapeHtml(ch.notModernIcelandic.warning)}</strong>
+          <ul>${ch.notModernIcelandic.points.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}</ul>
+        </aside>
+        <section>
+          <h2>${escapeHtml(ch.oldNorwegian.title)}</h2>
+          <p>${escapeHtml(ch.oldNorwegian.text)}</p>
+        </section>
+        <section>
+          <h2>${escapeHtml(ch.sources.title)}</h2>
+          <ul>${ch.sources.items.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}</ul>
+        </section>
+        <section>
+          <h2>${escapeHtml(ch.pronunciationHonesty.title)}</h2>
+          <p>${escapeHtml(ch.pronunciationHonesty.text)}</p>
+        </section>
+        <section>
+          <h2>${escapeHtml(ch.labels.title)}</h2>
+          <ul class="label-legend">
+            ${ch.labels.items
+              .map(
+                (i) =>
+                  `<li><span class="label ${labelClass(i.code)}">${escapeHtml(i.code)}</span> ${escapeHtml(i.meaning)}</li>`
+              )
+              .join("")}
+          </ul>
+        </section>
+        <section>
+          <h2>Path roadmap</h2>
+          <ol class="roadmap">
+            ${ch.roadmap
+              .map(
+                (r) =>
+                  `<li><span class="rm-num">L${r.id}</span> ${escapeHtml(r.title)} <em>(${escapeHtml(r.status)})</em></li>`
+              )
+              .join("")}
+          </ol>
+          <p class="muted">Section 1 Foundations is playable as path units; later sections are locked shells.</p>
+        </section>
+        <p><a class="btn primary" href="#/home">Back to path</a></p>
+      </article>`;
+  }
+
+  function renderFuthark() {
+    const F = NORDRONA.futhark;
+    const chron = F.chronology.points
+      .map(
+        (p) => `
+        <article class="chrono-card">
+          <h3>${escapeHtml(p.name)}</h3>
+          <p class="muted">${escapeHtml(p.period)} · ${escapeHtml(p.script)}</p>
+          <p>${escapeHtml(p.use)}</p>
+        </article>`
+      )
+      .join("");
+    const warns = F.chronology.warnings.map((w) => `<li>${escapeHtml(w)}</li>`).join("");
+    const runes = F.row
+      .map(
+        (r) => `
+        <div class="rune-card">
+          <span class="rune-glyph" aria-hidden="true">${r.glyph}</span>
+          <span class="rune-name">${escapeHtml(r.name)}</span>
+          <span class="rune-value">${escapeHtml(r.value)}</span>
+          <span class="rune-note muted">${escapeHtml(r.note)}</span>
+        </div>`
+      )
+      .join("");
+    const corr = F.correlations.items
+      .map((i) => `<li><strong>${escapeHtml(i.title)}</strong> — ${escapeHtml(i.text)}</li>`)
+      .join("");
+    const quiz = (F.quiz || [])
+      .map(
+        (q) => `
+        <fieldset class="ex-block" data-ex="${q.id}">
+          <legend>${q.prompt}</legend>
+          <div class="choices">
+            ${(q.choices || [])
+              .map(
+                (c) =>
+                  `<label class="choice"><input type="radio" name="${q.id}" value="${c.id}" /><span>${c.text}</span></label>`
+              )
+              .join("")}
+          </div>
+          <button type="button" class="btn primary futhark-check" data-ex="${q.id}">Check</button>
+          <div class="ex-feedback" hidden></div>
+        </fieldset>`
+      )
+      .join("");
+
+    return `
+      <article class="prose futhark-view">
+        <p class="eyebrow">Side path · not Latin ON</p>
+        <h1>${escapeHtml(F.title)}</h1>
+        <p class="lede">${escapeHtml(F.subtitle)}</p>
+        <aside class="callout warn"><strong>Not saga orthography</strong><ul>${warns}</ul></aside>
+        <h2>${escapeHtml(F.chronology.title)}</h2>
+        <div class="chrono-grid">${chron}</div>
+        <h2>24-rune row (conventional names)</h2>
+        <div class="rune-grid">${runes}</div>
+        <h2>${escapeHtml(F.correlations.title)}</h2>
+        <ul class="scholar-list">${corr}</ul>
+        <h2>Quiz</h2>
+        ${quiz}
+        <p><a class="btn" href="#/home">← Back to ON path</a></p>
+      </article>`;
+  }
+
+  function renderReview() {
+    return `
+      <section class="panel">
+        <h1>Spaced review</h1>
+        <p class="muted">Missed written items from path sessions.</p>
+        <div id="review-root"></div>
+        <p><a class="btn" href="#/home">Back to path</a></p>
+      </section>`;
+  }
+
+  function renderCelebrate(payload) {
+    return `
+      <div class="celebrate">
+        <p class="eyebrow">Level complete</p>
+        <h1>${payload.perfect ? "Flawless!" : "Well done!"}</h1>
+        <p class="lede">+${payload.xp} XP${payload.perfect ? " (perfect bonus)" : ""} · ${payload.mistakes} mistake${payload.mistakes === 1 ? "" : "s"}</p>
+        <div class="hero-actions">
+          ${
+            payload.nextId
+              ? `<a class="btn primary" href="#/session/${escapeHtml(payload.nextId)}">Continue</a>`
+              : ""
+          }
+          <a class="btn" href="#/home">Path map</a>
+        </div>
+      </div>`;
+  }
+
+  function renderFailed() {
+    return `
+      <div class="celebrate failed">
+        <p class="eyebrow">Out of hearts</p>
+        <h1>Rest &amp; retry</h1>
+        <p class="lede">You used the mistake budget. Review missed items, then try the level again — progress on this node is not saved until you finish.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#/session/${escapeHtml(state.levelId)}">Retry level</a>
+          <a class="btn" href="#/review">Review queue</a>
+          <a class="btn ghost" href="#/home">Path map</a>
+        </div>
+      </div>`;
+  }
+
+  function renderSession() {
+    const S = NORDRONA.session;
+    if (state.celebrate) return renderCelebrate(state.celebrate);
+    if (state.failed) return renderFailed();
+
+    if (!state.sessionActive) {
+      const res = S.start(state.levelId);
+      if (!res.ok) {
+        return `
+          <section class="panel">
+            <h1>${res.reason === "locked" ? "Level locked" : "Level unavailable"}</h1>
+            <p>Complete earlier nodes on the path first, or this shell is coming soon.</p>
+            <a class="btn" href="#/home">Back to path</a>
+          </section>`;
+      }
+      state.sessionActive = true;
+      state.showIntro = true;
+    }
+    return S.renderShell(state.showIntro);
+  }
+
+  function render() {
+    const app = $("#app");
+    if (!app) return;
+
+    if (state.view === "session") {
+      app.innerHTML = `
+        ${renderHeader()}
+        <main class="main session-main">${renderSession()}</main>
+        <footer class="site-footer">Norðrœna · Classical Old Norse · scholarly labels · not Modern Icelandic</footer>`;
+      bindSessionHandlers(app);
+      return;
+    }
+
+    let main = "";
+    if (state.view === "charter") main = renderCharter();
+    else if (state.view === "futhark") main = renderFuthark();
+    else if (state.view === "review") main = renderReview();
+    else if (state.view === "notes") main = renderStudyNotes();
+    else if (state.view === "lesson") main = renderClassicLesson();
+    else main = renderPathHome();
+
+    app.innerHTML = `
+      ${renderHeader()}
+      <main class="main">${main}</main>
+      <footer class="site-footer">Norðrœna · Classical Old Norse path · ATTESTED / NORMALIZED / RECONSTRUCTED · not Modern Icelandic</footer>`;
+
+    bindTts(app);
+    bindMic(app);
+
+    const reset = $("#reset-progress");
+    if (reset) {
+      reset.addEventListener("click", () => {
+        if (confirm("Reset all path progress, XP, and streak?")) {
+          NORDRONA.progress.resetAll();
+          render();
+        }
+      });
+    }
+
+    if (state.view === "review") {
+      const root = $("#review-root");
+      if (root && NORDRONA.review) NORDRONA.review.renderQueue(root);
+    }
+
+    if (state.view === "lesson") {
+      $$(".classic-check", app).forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-ex");
+          const lesson = NORDRONA.lessons[1];
+          const ex = (lesson.exercises || []).find((x) => x.id === id);
+          const field = btn.closest("fieldset");
+          const fb = field && $(".ex-feedback", field);
+          if (!ex || !fb) return;
+          let user = null;
+          if (ex.type === "text") {
+            const inp = field.querySelector(".classic-text");
+            user = inp ? inp.value : "";
+          } else {
+            const picked = field.querySelector(`input[name="${id}"]:checked`);
+            if (!picked) {
+              fb.hidden = false;
+              fb.className = "ex-feedback bad";
+              fb.textContent = "Pick an answer.";
+              return;
+            }
+            user = picked.value;
+          }
+          const result = NORDRONA.exercises.gradeWritten(ex, user);
+          fb.hidden = false;
+          fb.className = "ex-feedback " + (result.correct ? "ok" : "bad");
+          fb.innerHTML = result.correct
+            ? "Correct. " + (result.explanation || "")
+            : "Not quite. " +
+              (result.explanation || "") +
+              (result.hint ? `<p class="hint">Hint: ${escapeHtml(result.hint)}</p>` : "");
+        });
+      });
+    }
+
+    if (state.view === "futhark") {
+      $$(".futhark-check").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-ex");
+          const q = (NORDRONA.futhark.quiz || []).find((x) => x.id === id);
+          const field = btn.closest("fieldset");
+          const picked = field && field.querySelector(`input[name="${id}"]:checked`);
+          const fb = field && $(".ex-feedback", field);
+          if (!q || !fb) return;
+          if (!picked) {
+            fb.hidden = false;
+            fb.className = "ex-feedback bad";
+            fb.textContent = "Pick an answer.";
+            return;
+          }
+          const ok = picked.value === q.answer;
+          fb.hidden = false;
+          fb.className = "ex-feedback " + (ok ? "ok" : "bad");
+          fb.innerHTML = ok
+            ? "Correct. " + (q.explanation || "")
+            : "Not quite. " + (q.explanation || "") + (q.hint ? `<p class="hint">Hint: ${q.hint}</p>` : "");
+        });
+      });
+    }
+
+    // Prevent locked node navigation
+    $$(".path-node.locked").forEach((a) => {
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+      });
+    });
+  }
+
+  function bindSessionHandlers(app) {
+    const S = NORDRONA.session;
+    bindTts(app);
+    bindMic(app);
+
+    const quit = $(".sess-quit", app);
+    if (quit) {
+      quit.addEventListener("click", () => {
+        S.abandon();
+        state.sessionActive = false;
+        navigate("home");
+      });
+    }
+
+    const startEx = $(".sess-start-ex", app);
+    if (startEx) {
+      startEx.addEventListener("click", () => {
+        S.markIntroDone();
+        state.showIntro = false;
+        render();
+      });
+    }
+
+    // choice buttons
+    $$(".choice-btn", app).forEach((btn) => {
+      btn.addEventListener("click", () => {
+        $$(".choice-btn", app).forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
+    });
+
+    // tiles
+    $$(".tile-btn", app).forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const out = $("[data-role='tile-out']", app);
+        const val = btn.getAttribute("data-val");
+        if (out) {
+          out.textContent = val;
+          out.setAttribute("data-val", val);
+          out.classList.remove("muted");
+        }
+        $$(".tile-btn", app).forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
+    });
+
+    const checkBtn = $("#sess-check", app);
+    const contBtn = $("#sess-continue", app);
+    const feedback = $("#sess-feedback", app);
+    const sessBody = $("#sess-exercise", app);
+
+    function showContinue() {
+      if (checkBtn) checkBtn.hidden = true;
+      if (contBtn) contBtn.hidden = false;
+    }
+
+    if (checkBtn) {
+      checkBtn.addEventListener("click", () => {
+        const sess = S.getSession();
+        const ex = S.currentExercise();
+        if (!ex) return;
+
+        // lore / speak: Check acts as continue-prep
+        if (ex.type === "lore" || ex.type === "speak") {
+          const result = S.check(app);
+          if (feedback) {
+            feedback.hidden = false;
+            feedback.className = "sess-feedback ok";
+            feedback.textContent =
+              ex.type === "speak"
+                ? "Checklist noted. Continue when ready."
+                : "Continue when ready.";
+          }
+          showContinue();
+          return;
+        }
+
+        const result = S.check(app);
+        if (!result.ok && result.reason === "empty") {
+          if (feedback) {
+            feedback.hidden = false;
+            feedback.className = "sess-feedback bad";
+            feedback.textContent = "Select or type an answer first.";
+          }
+          return;
+        }
+        if (!result.ok) return;
+
+        if (feedback) {
+          feedback.hidden = false;
+          feedback.className = "sess-feedback " + (result.correct ? "ok" : "bad");
+          let msg = result.correct ? "Correct!" : "Not quite.";
+          if (result.explanation) msg += " " + result.explanation;
+          if (!result.correct && result.hint) msg += " Hint: " + result.hint;
+          if (!result.correct && result.expected != null) {
+            const exp =
+              typeof result.expected === "object"
+                ? JSON.stringify(result.expected)
+                : String(result.expected);
+            msg += " Expected: " + exp;
+          }
+          feedback.textContent = msg;
+        }
+
+        // update hearts display
+        const heartsEl = $(".sess-hearts", app);
+        if (heartsEl && sess) {
+          heartsEl.textContent =
+            "♥".repeat(sess.hearts) + "♡".repeat(Math.max(0, sess.heartsMax - sess.hearts));
+        }
+
+        if (result.dead) {
+          showContinue();
+          contBtn.textContent = "See result";
+          return;
+        }
+        showContinue();
+      });
+    }
+
+    if (contBtn) {
+      contBtn.addEventListener("click", () => {
+        const sess = S.getSession();
+        if (sess && sess.hearts <= 0 && sess.checked && !sess.finished) {
+          // fail out
+          S.advance(); // may mark finished
+          state.failed = true;
+          state.sessionActive = false;
+          S.abandon();
+          render();
+          return;
+        }
+        const adv = S.advance();
+        if (adv.done) {
+          if (adv.failed) {
+            state.failed = true;
+            state.sessionActive = false;
+            render();
+            return;
+          }
+          state.celebrate = adv;
+          state.sessionActive = false;
+          render();
+          return;
+        }
+        state.showIntro = false;
+        render();
+      });
+    }
+  }
+
+  function init() {
+    parseHash();
+    // #/lesson/1 → Classic Lesson 1 full view; #/lessons → path
+    if (state.view === "lessons") {
+      state.view = "home";
+      location.hash = "#/home";
+    }
+    if (state.view === "lesson" && !state.levelId) {
+      state.levelId = "1";
+    }
+    render();
+    window.addEventListener("hashchange", () => {
+      const prev = state.view;
+      parseHash();
+      if (state.view !== "session") {
+        state.sessionActive = false;
+        state.celebrate = null;
+        state.failed = null;
+        if (NORDRONA.session) NORDRONA.session.abandon();
+      } else if (prev !== "session" || !state.sessionActive) {
+        state.sessionActive = false;
+        state.showIntro = true;
+        state.celebrate = null;
+        state.failed = null;
+      }
+      render();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+
+  </script>
+</body>
+</html>
